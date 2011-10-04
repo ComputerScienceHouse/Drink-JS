@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# https://github.com/Marak/colors.js
+npm install colors
+
+# https://github.com/felixge/node-mysql
+npm install mysql
+
+#https://github.com/visionmedia/express
+npm install express
+
+# https://github.com/LearnBoost/socket.io
+npm install socket.io
+
+# https://github.com/LearnBoost/socket.io-client
+npm install socket.io-client

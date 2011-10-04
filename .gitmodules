@@ -1,0 +1,3 @@
+[submodule "node-LDAP"]
+	path = node-LDAP
+	url = https://github.com/jeremycx/node-LDAP.git

@@ -1,0 +1,81 @@
+CSH Drink Server
+===
+
+Deps
+---
+- Node.js (>= v0.4.11)
+    - node-LDAP (https://github.com/jeremycx/node-LDAP.git)
+    - colors (https://github.com/Marak/colors.js)
+    - mysql (https://github.com/felixge/node-mysql)
+
+Configs
+---
+There are two configs that need to be added to the configs directory that will contain the credentials for mysql and ldap
+
+###configs/ldap_config.js
+```
+exports.ldap = {
+    username: "",
+    password: "",
+    host: "ldap://ldap.csh.rit.edu",
+    version: 3
+}
+```
+
+###configs/mysql_config.js
+```
+exports.mysql = {
+    user: '',
+    password: '',
+    host: ''
+}
+```
+
+Sunday Protocol
+---
+
+###USER
+Command:
+```USER <username>\n```
+
+Response:
+```OK:\n```
+
+###PASS
+Command:
+```PASS <password>\n```
+
+Response:
+
+    - Success:
+        ```OK: <num credits>\n```
+
+    - Failure:
+        ```ERR 407 Invalid password.\n```
+
+
+###IBUTTON
+Command:
+
+```IBUTTON <ibutton>\n```
+
+Response:
+
+- Success: ```OK: <num credits>\n```
+- Failure: ```ERR 207 Invalid Ibutton\n```
+
+###MACHINE
+Command:
+
+```MACHINE <machine alias>\n```
+
+- Machine aliases:
+    - ld
+    - d
+    - s
+
+Response:
+
+- Success: ```OK: Welcome to *drink machine name*\n```
+
+- Failure: ```ERR 414 Invalid machine name - USAGE: MACHINE < d | ld | s >\n```

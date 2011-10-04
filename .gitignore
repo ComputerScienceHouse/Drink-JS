@@ -1,0 +1,4 @@
+configs/mysql_config.js
+configs/ldap_config.js
+node_modules
+.*.swp

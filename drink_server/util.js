@@ -1,0 +1,33 @@
+/**
+ * Created by JetBrains PhpStorm.
+ * User: seanmcgary
+ * Date: 9/4/11
+ * Time: 6:35 PM
+ * To change this template use File | Settings | File Templates.
+ */
+var colors = require('colors');
+var sys = require('sys');
+
+exports.util = {
+    get_time: function() {
+	    return new Date().toUTCString();
+    },
+    print_error: function(error_msg, location){
+        var self = this;
+        sys.puts((self.get_time() + ' (' + location + ')').red + ' - ' + (error_msg).grey);
+    },
+    print_warn: function(warn_msg, location){
+        sys.puts((self.get_time() + ' (' + location + ')').yellow + ' - ' + (warn_msg).grey);
+    },
+    get_config: function(){
+        var self = this;
+        sys.puts((self.get_time() + ' - ').magenta + ' - Running in dev mode');
+        console.log("Drink env = " + process.env.DRINK_ENV);
+        if('DRINK_ENV' in process.env && process.env.DRINK_ENV == 'dev'){
+
+            return require('../configs/drink_config_dev.js').config;
+        } else {
+            return require('../configs/drink_config.js').config;
+        }
+    }
+}
