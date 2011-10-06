@@ -21,11 +21,14 @@ exports.util = {
     },
     get_config: function(){
         var self = this;
-        sys.puts((self.get_time() + ' - ').magenta + ' - Running in dev mode');
-        console.log("Drink env = " + process.env.DRINK_ENV);
-        if('DRINK_ENV' in process.env && process.env.DRINK_ENV == 'dev'){
-
-            return require('../configs/drink_config_dev.js').config;
+        
+        if(typeof process.env.DRINK_ENV != 'undefined'){
+            if(process.env.DRINK_ENV == 'dev'){
+                sys.puts((self.get_time() + ' - ').magenta + 'Running in dev mode');
+                return require('../configs/drink_config_dev.js').config;
+            } else {
+                return require('../configs/drink_config.js').config;
+            }
         } else {
             return require('../configs/drink_config.js').config;
         }

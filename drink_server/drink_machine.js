@@ -32,15 +32,15 @@ DrinkMachine.prototype = {
         sys.puts(self.machine_time().cyan + ' - Initializing ' + self.machine.long_name + ' server');
 
         self.socket.on('data', function(data){
-            //console.log(data.toString().replace("\n", "?"));
+
             var str_data = data.toString();
-            console.log(str_data);
-            if(str_data == "\n"){
+            self.recv_msg += str_data;
+
+            if(str_data[str_data.length - 1] == "\n"){
                 var raw = self.recv_msg;
-                var message = self.recv_msg.substr(0, self.recv_msg.length - 1).split("\n");
-                //sys.puts(self.machine_time().blue + ' - ' + message);
-                //console.log(raw);
+                var message = self.recv_msg.substr(0, self.recv_msg.length - 1).split(" ");
                 self.recv_msg = '';
+                
                 // messages sent from tinis to server
                 switch(message[0]){
                     // 0 <password (string)>\n - login with password
@@ -100,29 +100,35 @@ DrinkMachine.prototype = {
 
                     // 9\n - noop to keep connection open
                     case "9":
-                        //sys.puts(self.machine_time().blue + ' - Noop');
                         break;
                 }
             } else {
-                self.recv_msg += str_data + "\n";
+                self.recv += " ";
             }
         });
 
         self.socket.on('close', function(){
-            
             sys.puts(self.machine_time().cyan + ' - Tini disconnected');
+            
+            self.machine.connected = false;
         });
 
         self.socket.on('error', function(){
             util.print_error('Tini error - connection terminated', 'drink_machine');
+
+            self.machine.connected = false;
         });
 
         self.socket.on('end', function(){
             sys.puts(self.machine_time().cyan + ' - Tini ended');
+
+            self.machine.connected = false;
         });
 
         self.socket.on('timeout', function(){
             util.print_error('Tini error - connection timed out', 'drink_machine');
+
+            self.machine.connected = false;
         });
 
     },
@@ -206,7 +212,6 @@ DrinkMachine.prototype = {
             command_exec({slot: slot, delay: delay});
 
         } else {
-            console.log('queing drop request');
 
             self.request_queue.push({command: command_exec, data: {slot: slot, delay: delay}, callback: response_callback});
         }

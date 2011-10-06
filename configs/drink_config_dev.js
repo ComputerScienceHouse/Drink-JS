@@ -1,13 +1,17 @@
 exports.config = {
     machine_server: {
-        host: 'localhost',
+        host: '0.0.0.0',
         port: 4343
     },
     tini_ips: {
-        '127.0.0.1': 'd'
+        '127.0.0.1': 'd',
+        '127.0.1.1': 'd',
+        '129.21.50.201': 's'
     },
     machine_ip_mapping: {
-        '127.0.0.1': 'd'
+        '127.0.0.1': 'd',
+        '127.0.1.1': 'd',
+        '129.21.50.201': 's'
     },
     machines: {
         ld: {
@@ -30,7 +34,7 @@ exports.config = {
         }
     },
     sunday: {
-        host: 'localhost',
+        host: '0.0.0.0',
         port: 4242
     },
     error_codes: {
@@ -66,7 +70,9 @@ exports.config = {
         "412": 'ERR 412 User already registered.',
         "413": 'ERR 413 No machine selected.',
         "414": 'ERR 414 Invalid machine name',
-        "415": 'ERR 415 Invalid command'
+        "415": 'ERR 415 Invalid command',
+        "416": 'ERR 416 Machine is offline or unreachable'
+        
     },
     machine_codes: {
         "ld": "Little Drink",

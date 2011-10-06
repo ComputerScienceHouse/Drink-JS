@@ -188,7 +188,6 @@ LDAPHandler.prototype = {
 
         self.auth(auth_type, null, function(error, msg_id){
             if(error == null){
-                console.log('authed');
                 self.ldap.modify(dn, bal, function(msg_id, error){
                     callback(msg_id, error);
                     self.close();

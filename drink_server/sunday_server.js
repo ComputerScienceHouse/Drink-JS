@@ -70,6 +70,8 @@ SundayServer.prototype = {
                 if(socket.address().address in self.machine_ip_mapping){
                     conn.current_machine = self.machine_ip_mapping[socket.address().address];
                     machine_name = self.machine_server.machines[conn.current_machine].long_name;
+                } else {
+                    conn.current_machine = 'd';
                 }
 
                 socket.write("Welcome to " + machine_name + "\n");
@@ -281,8 +283,9 @@ SundayServer.prototype = {
                         if(parseInt(conn.balance) >= parseInt(slot.price)){
 
                             self.machine_server.machines[conn.current_machine].machine_inst.DROP(drop_slot, drop_delay, function(drop_response){
-                                //console.log(drop_response);
+
                                 var response = '';
+
                                 try {
                                     response = drop_response.substr(0, 1);
                                 }
@@ -297,10 +300,13 @@ SundayServer.prototype = {
 
                                             // log drop to drink db
                                             drink_db.get_machine_id_for_alias(conn.current_machine, function(machine_id){
-
-                                                drink_db.log_drop(machine_id, conn.username, drop_slot, parseInt(slot.price), 'ok', function(res){
-                                                    self.send_msg_code('OK', socket, ' Dropping drink');
-                                                });
+                                                if(machine_id != null){
+                                                    drink_db.log_drop(machine_id, conn.username, drop_slot, parseInt(slot.price), 'ok', function(res){
+                                                        self.send_msg_code('OK', socket, ' Dropping drink');
+                                                    });
+                                                } else {
+                                                    self.send_msg_code('103', socket);
+                                                }
                                             });
                                         } else {
                                             // something happened oh noes!!
@@ -363,7 +369,8 @@ SundayServer.prototype = {
                 var stat_string = '';
 
                 for(var i = 0; i < stats.length; i++){
-                    stat_string += stats[i].slot_num + ' "' + stats[i].name + '" ' + stats[i].price + ' ' + stats[i].available + "\n";
+                    var status = (stats[i].status == 'enabled') ? 1 : 0;
+                    stat_string += stats[i].slot_num + ' "' + stats[i].name + '" ' + stats[i].price + ' ' + stats[i].available + ' ' + status + "\n";
                 }
 
                 stat_string += "OK " + stats.length + " Slots retrieved";
@@ -372,8 +379,7 @@ SundayServer.prototype = {
 
             } else {
                 // error getting stat
-                console.log(stats);
-                console.log('error getting stats');
+                self.send_msg_code("416", socket);
             }
         });
 
