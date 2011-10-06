@@ -54,7 +54,7 @@ SundayServer.prototype = {
             
             conn.username = null;
             conn.password = null;
-            conn.authenticated = null;
+            conn.authenticated = false;
             conn.auth_type = null;
             conn.ibutton = null;
             conn.current_machine = null;
@@ -218,6 +218,7 @@ SundayServer.prototype = {
      */
     GETBALANCE: function(command, socket, conn){
         var self = this;
+        console.log(conn.authenticated);
         if(conn.authenticated == false){
             self.send_msg_code('204', socket);
             return;
@@ -303,6 +304,29 @@ SundayServer.prototype = {
                                                 if(machine_id != null){
                                                     drink_db.log_drop(machine_id, conn.username, drop_slot, parseInt(slot.price), 'ok', function(res){
                                                         self.send_msg_code('OK', socket, ' Dropping drink');
+
+                                                        self.machine_server.machines[conn.current_machine].machine_inst.SLOT_STAT(drop_slot, function(response){
+                                                            //response = response[0].substr(1, response.length - 2);
+                                                            var slot_data = response[0].replace(/^\s+/,"").split(" ");
+
+                                                            drink_db.get_status_for_slot(conn.current_machine, drop_slot, function(results){
+                                                                if(results != null){
+                                                                    if(slot_data[1] == 1 && results.available < 1){
+                                                                        // set slot count to 1
+                                                                        drink_db.update_slot_count(machine_id, drop_slot, 1, function(results){
+                                                                            console.log(results);
+                                                                        });
+                                                                    } else if(slot_data[1] == 0 && results.available != 0){
+                                                                        // set slot count to 0
+                                                                        drink_db.update_slot_count(machine_id, drop_slot, 0, function(results){
+                                                                            console.log(results);
+                                                                        });
+                                                                    }
+                                                                }
+
+                                                            });
+                                                        });
+
                                                     });
                                                 } else {
                                                     self.send_msg_code('103', socket);

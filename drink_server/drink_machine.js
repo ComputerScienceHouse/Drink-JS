@@ -161,8 +161,7 @@ DrinkMachine.prototype = {
      *
      * @param callback
      */
-        /*
-    STAT: function(callback){
+    SLOT_STAT: function(slot_num, callback){
         var self = this;
 
         var response_callback = function(response){
@@ -170,7 +169,7 @@ DrinkMachine.prototype = {
         }
 
         var command_exec = function(data){
-            self.socket.write("6\n");
+            self.socket.write("6 " + slot_num + "\n");
         }
 
         if(self.requesting == false){
@@ -184,7 +183,7 @@ DrinkMachine.prototype = {
         }
 
 
-    },*/
+    },
     /**
      * Drop a drink. 
      * @param slot

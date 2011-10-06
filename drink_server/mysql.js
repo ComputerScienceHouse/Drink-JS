@@ -71,6 +71,19 @@ Drink_DB.prototype = {
             }
         });
     },
+    update_slot_count: function(machine_id, slot_num, count, callback){
+        var self = this;
+
+        self.client.query("UPDATE slots SET available=" + count + " WHERE slot_num=" + slot_num + " AND machine_id=" + machine_id,
+            function(err, results, fields){
+                if(err == null){
+                    callback(results);
+                } else {
+                    callback(null);
+                }
+            }
+        )
+    },
     log_drop: function(machine_id, uid, slot_num, drink_price, status, callback){
         var self = this;
         self.client.query("INSERT INTO money_log(username, admin, amount, direction, reason) " +
