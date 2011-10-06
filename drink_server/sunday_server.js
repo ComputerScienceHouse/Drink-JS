@@ -314,12 +314,12 @@ SundayServer.prototype = {
                                                                     if(slot_data[1] == 1 && results.available < 1){
                                                                         // set slot count to 1
                                                                         drink_db.update_slot_count(machine_id, drop_slot, 1, function(results){
-                                                                            console.log(results);
+
                                                                         });
                                                                     } else if(slot_data[1] == 0 && results.available != 0){
                                                                         // set slot count to 0
                                                                         drink_db.update_slot_count(machine_id, drop_slot, 0, function(results){
-                                                                            console.log(results);
+                                                                            
                                                                         });
                                                                     }
                                                                 }
