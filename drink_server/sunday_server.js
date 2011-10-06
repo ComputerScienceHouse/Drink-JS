@@ -278,7 +278,7 @@ SundayServer.prototype = {
                 if(slot != null){
 
                     // check to see if slot is not empty and is enabled
-                    if(slot.available > 0 || slot.status == 'enabled'){
+                    if(slot.available > 0 && slot.status == 'enabled'){
                         
                         //check to see if user has the funds
                         if(parseInt(conn.balance) >= parseInt(slot.price)){
