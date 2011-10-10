@@ -18,7 +18,7 @@ function DrinkMachine(parameters){
     self.request_queue = [];
     self.requesting = false;
     self.timeout_id = null;
-    self.TIMEOUT = 5000;
+    self.TIMEOUT = 10000;
 
     self.init();
 
@@ -177,12 +177,13 @@ DrinkMachine.prototype = {
         }
 
         if(self.requesting == false){
+            sys.puts(self.machine_time().grey + ' - Queue is empty, processing command'.grey);
             self.requesting = true;
             self.request_callback = response_callback;
 
-            command_exec();
+            command_exec(data);
         } else {
-            
+            sys.puts(self.machine_time().grey + ' - System busy, queing command'.grey);
             self.request_queue.push({command: command_exec, data: data, callback: response_callback});
         }
     },
@@ -205,7 +206,8 @@ DrinkMachine.prototype = {
                 // send some kind of error code
                 util.print_error('Tini timeout', 'SLOT_STAT');
 
-                self.clear_timeout();
+                self.process_queue();
+
             }, self.TIMEOUT);
         }
 
@@ -228,13 +230,15 @@ DrinkMachine.prototype = {
         var command_exec = function(data){
             data.delay = data.delay * 1000;
             sys.puts(self.machine_time().cyan + ' - Delaying ' + data.delay + 'ms');
-            setTimeout(function(){
-                self.socket.write("3" + data.slot + "\n");
+            self.socket.write("3" + data.slot + "\n");
+            
+            self.timeout_id = setTimeout(function(){
 
                 self.timeout_id = setTimeout(function(){
-                    // send some kind of error code
+                    // tini timed out, log to console, send error code, then continue processing queue
                     util.print_error('Tini timeout', 'DROP');
-                    self.clear_timeout();
+                    self.process_queue();
+                    callback('5');
                 }, self.TIMEOUT);
 
             }, data.delay);

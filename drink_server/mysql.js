@@ -61,7 +61,11 @@ Drink_DB.prototype = {
                 var sql = "SELECT * FROM slots WHERE machine_id=" + machine_id + " AND slot_num=" + slot_num;
                 self.client.query(sql, function(err, results, fields){
                     if(err == null){
-                        callback(results[0]);
+                        if(results.length > 0){
+                            callback(results[0]);
+                        } else {
+                            callback(false);
+                        }
                     } else {
                         // do something with sql error
                         util.print_error("Slot not found", "get_status_for_slot - " + sql);
