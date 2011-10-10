@@ -1,0 +1,20 @@
+d.csh.rit.edu.		    300	    IN	CNAME	drink.csh.rit.edu.
+drink.csh.rit.edu.	    300	    IN	CNAME	bigdrink.csh.rit.edu.
+bigdrink.csh.rit.edu.	3600	IN	A	    129.21.49.106
+
+ld.csh.rit.edu.		    300	    IN	CNAME	littledrink.csh.rit.edu.
+littledrink.csh.rit.edu 3600	IN	A	    129.21.49.105
+
+s.csh.rit.edu.		    300	    IN	CNAME	snack.csh.rit.edu.
+snack.csh.rit.edu.	    3600	IN	A	    129.21.49.107
+
+
+erlang.csh.rit.edu.	    3600	IN	A   	129.21.49.96
+
+snackm.csh.rit.edu      129.21.50.36
+ldm.csh.rit.edu         129.21.50.19
+big-drink.csh.rit.edu   129.21.50.18       
+
+
+
+

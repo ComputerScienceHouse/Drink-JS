@@ -17,6 +17,8 @@ function DrinkMachine(parameters){
     self.request_callback = null;
     self.request_queue = [];
     self.requesting = false;
+    self.timeout_id = null;
+    self.TIMEOUT = 5000;
 
     self.init();
 
@@ -58,7 +60,8 @@ DrinkMachine.prototype = {
                         self.request_callback(raw);
                         self.requesting = false;
 
-                        self.process_queue();
+                        //self.process_queue();
+                        self.clear_timeout();
 
                         break;
 
@@ -77,7 +80,8 @@ DrinkMachine.prototype = {
                         self.request_callback(raw);
                         self.requesting = false;
 
-                        self.process_queue();
+                        //self.process_queue();
+                        self.clear_timeout();
                         break;
 
                     // 7 <slot(int)> <empty(int)>\n || 7 <slot(int)> <empty(int)> <slot(int)> <empty(int)>\n - stat for slot(s)
@@ -94,8 +98,8 @@ DrinkMachine.prototype = {
 
                         self.requesting = false;
 
-                        self.process_queue();
-
+                        //self.process_queue();
+                        self.clear_timeout();
                         break;
 
                     // 9\n - noop to keep connection open
@@ -156,6 +160,32 @@ DrinkMachine.prototype = {
         }
 
     },
+    clear_timeout: function(){
+        var self = this;
+
+        clearTimeout(self.timeout_id);
+
+        self.timeout_id = null;
+
+        self.process_queue();
+    },
+    prep_command: function(command_exec, response_callback, data){
+        var self = this;
+
+        if(typeof data == 'undefined'){
+            data = {};
+        }
+
+        if(self.requesting == false){
+            self.requesting = true;
+            self.request_callback = response_callback;
+
+            command_exec();
+        } else {
+            
+            self.request_queue.push({command: command_exec, data: data, callback: response_callback});
+        }
+    },
     /**
      * Get the status for all slots
      *
@@ -170,18 +200,16 @@ DrinkMachine.prototype = {
 
         var command_exec = function(data){
             self.socket.write("6 " + slot_num + "\n");
+
+            self.timeout_id = setTimeout(function(){
+                // send some kind of error code
+                util.print_error('Tini timeout', 'SLOT_STAT');
+
+                self.clear_timeout();
+            }, self.TIMEOUT);
         }
 
-        if(self.requesting == false){
-            self.requesting = true;
-            self.request_callback = response_callback;
-
-            command_exec();
-        } else {
-
-            self.request_queue.push({command: command_exec, data: {}, callback: response_callback});
-        }
-
+        self.prep_command(command_exec, response_callback);
 
     },
     /**
@@ -194,6 +222,7 @@ DrinkMachine.prototype = {
 
         var response_callback = function(response){
             callback(response);
+
         }
 
         var command_exec = function(data){
@@ -201,19 +230,17 @@ DrinkMachine.prototype = {
             sys.puts(self.machine_time().cyan + ' - Delaying ' + data.delay + 'ms');
             setTimeout(function(){
                 self.socket.write("3" + data.slot + "\n");
+
+                self.timeout_id = setTimeout(function(){
+                    // send some kind of error code
+                    util.print_error('Tini timeout', 'DROP');
+                    self.clear_timeout();
+                }, self.TIMEOUT);
+
             }, data.delay);
         }
 
-        if(self.requesting == false){
-            self.requesting = true;
-            self.request_callback = response_callback;
-
-            command_exec({slot: slot, delay: delay});
-
-        } else {
-
-            self.request_queue.push({command: command_exec, data: {slot: slot, delay: delay}, callback: response_callback});
-        }
+        self.prep_command(command_exec, response_callback, {delay: delay, slot: slot});
     }
 };
 
