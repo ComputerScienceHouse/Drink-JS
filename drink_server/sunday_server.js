@@ -329,12 +329,12 @@ SundayServer.prototype = {
 
                                                     });
                                                 } else {
-                                                    self.send_msg_code('103', socket);
+                                                    self.send_msg_code('103', socket, ' Bad Machine ID');
                                                 }
                                             });
                                         } else {
                                             // something happened oh noes!!
-                                            self.send_msg_code('103', socket);
+                                            self.send_msg_code('103', socket, ' LDAP Error');
                                         }
                                     });
                                 } else {
@@ -368,7 +368,7 @@ SundayServer.prototype = {
                     }
                 } else {
                     // error - slot not available or something
-                    self.send_msg_code('103', socket);
+                    self.send_msg_code('103', socket, 'Slot not available or something');
                     return;
                 }
             });
