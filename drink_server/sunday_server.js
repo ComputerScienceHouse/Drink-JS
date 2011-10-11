@@ -218,7 +218,6 @@ SundayServer.prototype = {
      */
     GETBALANCE: function(command, socket, conn){
         var self = this;
-        console.log(conn.authenticated);
         if(conn.authenticated == false){
             self.send_msg_code('204', socket);
             return;
@@ -275,7 +274,7 @@ SundayServer.prototype = {
             drink_db.get_status_for_slot(conn.current_machine, command[1], function(slot){
                 
                 // check to make sure slot is "real"
-                if(slot != null){
+                if(slot != null && slot != false){
 
                     // check to see if slot is not empty and is enabled
                     if(slot.available > 0 && slot.status == 'enabled'){
@@ -323,10 +322,8 @@ SundayServer.prototype = {
                                                                         });
                                                                     }
                                                                 }
-
                                                             });
                                                         });
-
                                                     });
                                                 } else {
                                                     self.send_msg_code('103', socket, ' Bad Machine ID');
@@ -367,9 +364,14 @@ SundayServer.prototype = {
                         return;
                     }
                 } else {
-                    // error - slot not available or something
-                    self.send_msg_code('103', socket, 'Slot not available or something');
-                    return;
+                    if(slot == false){
+                        self.send_msg_code('105', socket);
+                    } else {
+                        // error - slot not available or something
+                        self.send_msg_code('103', socket, 'Slot not available or something');
+                        return;
+                    }
+
                 }
             });
         } else {
