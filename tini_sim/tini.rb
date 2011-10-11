@@ -3,7 +3,7 @@
 # Tini hardware spoofing script
 # Alex Crawford (abcrawf) - Oct. 2011
 #
-# Note: Only tested with Ruby 1.9.2
+# Note: Only tested with Ruby 1.9.2 and 1.8.7
 #
 # This script implements the full Tini-Drink spec. Drops randomly fail
 # based on the DROP_ACK_ODDS percentage. The status of the slots changes
@@ -33,6 +33,9 @@ SEND_TEMP_INTERVAL        = 50
 SEND_NOOP_INTERVAL        = 40
 SERVER_PASSWORD           = 'herpin_my_derp'
 
+RESPOND_TIME_ON           = 30
+RESPOND_TIME_OFF          = 10
+
 
 unless (ARGV.size == 2)
 	puts "Usage: #{__FILE__} server port"
@@ -53,6 +56,11 @@ rescue SocketError => e
 rescue Errno::ETIMEDOUT => e
 	puts e
 	puts "Retrying..."
+	retry
+rescue Errno::ECONNREFUSED => e
+	puts e
+	puts "Retrying..."
+	sleep(5)
 	retry
 end
 
@@ -78,6 +86,7 @@ end
 
 
 puts "\nPress any key to quit\n\n"
+respond = true
 
 t_temp = Thread.new do
 	temp = 0.0
@@ -97,39 +106,53 @@ t_noop = Thread.new do
 	end
 end
 
+t_respond = Thread.new do
+	while true
+		respond = true
+		puts "Responding to messages"
+		sleep(RESPOND_TIME_ON)
+
+		respond = false
+		puts "Not responding to messages"
+		sleep(RESPOND_TIME_OFF)
+	end
+end
+
 t_process = Thread.new do
-	msg = ''
 	while true
 		begin
-			Timeout::timeout(READLINE_TIMEOUT) do
-				msg = socket.readline
+			msg = Timeout::timeout(READLINE_TIMEOUT) do
+				socket.readline
 			end
 		rescue Timeout::Error
 			next
 		end
 
-		opcode  = msg[0]
+		puts "Received #{msg.dump}"
+		opcode  = msg[0].chr
 		payload = msg[1..-1].strip
 
-		puts "Received #{msg.dump}"
-
-		case opcode
-			when OPCODE_TINI_DROP
-				slot = payload.to_i
-				puts "Dropping from slot #{slot}"
-				if (Random.new.rand > DROP_ACK_ODDS)
-					puts "Sending drop ack"
-					socket.send("#{OPCODE_SERVER_DROP_ACK}\n", 0)
+		if respond
+			case opcode
+				when OPCODE_TINI_DROP
+					slot = payload.to_i
+					puts "Dropping from slot #{slot}"
+					if (rand() > DROP_ACK_ODDS)
+						puts "Sending drop ack"
+						socket.send("#{OPCODE_SERVER_DROP_ACK}\n", 0)
+					else
+						puts "Sending drop nack"
+						socket.send("#{OPCODE_SERVER_DROP_NACK}\n", 0)
+					end
+				when OPCODE_TINI_SLOT_STATUS
+					slot = payload.to_i
+					status = (rand() + 0.5).to_i
+					puts "Requested slot #{slot} status"
+					puts "Sending status (#{status}) for slot (#{slot})"
+					socket.send("#{OPCODE_SERVER_SLOT_STATUS} #{slot} #{status}\n", 0)
 				else
-					puts "Sending drop nack"
-					socket.send("#{OPCODE_SERVER_DROP_NACK}\n", 0)
-				end
-			when OPCODE_TINI_SLOT_STATUS
-				slot = payload.to_i
-				status = (Random.new.rand + 0.5).to_i
-				puts "Requested slot #{slot} status"
-				puts "Sending status (#{status}) for slot (#{slot})"
-				socket.send("#{OPCODE_SERVER_SLOT_STATUS} #{slot} #{status}\n", 0)
+					puts "Unrecognized opcode (#{opcode.dump})"
+			end
 		end
 	end
 end
@@ -141,3 +164,4 @@ STDIN.gets
 t_temp.exit
 t_noop.exit
 t_process.exit
+t_respond.exit
