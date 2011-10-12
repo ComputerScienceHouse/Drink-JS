@@ -185,3 +185,30 @@ ERR 204 You need to login.\n
 ```
 
 Requires: A valid, authenticated user
+
+### DROP
+
+Drop a drink from the current machine with a delay.
+
+Command:
+
+```
+DROP <slot num(int)> [delay (int)]\n
+```
+
+
+Response:
+
+- Success:
+
+```
+OK: Dropping drink\n
+```
+
+- Failure:
+
+```
+ERR 103 Unknown Failure.
+
+ERR 150 Unable to initialize hardware for drop.
+```
