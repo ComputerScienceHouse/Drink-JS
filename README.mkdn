@@ -61,14 +61,14 @@ PASS <password>\n
 Response:
 
 - Success:
-	```
-	OK: <num credits>\n
-	```
+```
+OK: <num credits>\n
+```
 
 - Failure:
-    ```
-	ERR 407 Invalid password.\n
-	```
+```
+ERR 407 Invalid password.\n
+```
 
 
 ###IBUTTON
