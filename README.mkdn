@@ -13,6 +13,7 @@ Configs
 There are two configs that need to be added to the configs directory that will contain the credentials for mysql and ldap
 
 ###configs/ldap_config.js
+
 ```
 exports.ldap = {
     username: "",
@@ -23,6 +24,7 @@ exports.ldap = {
 ```
 
 ###configs/mysql_config.js
+
 ```
 exports.mysql = {
     user: '',
@@ -36,13 +38,16 @@ Sunday Protocol
 
 ###USER
 Command:
+
 ```USER <username>\n```
 
 Response:
+
 ```OK:\n```
 
 ###PASS
 Command:
+
 ```PASS <password>\n```
 
 Response:
