@@ -50,6 +50,8 @@ Response:
 OK:\n
 ```
 
+Requires: nothing
+
 ###PASS
 
 Command:
@@ -72,6 +74,7 @@ OK: <num credits>\n
 ERR 407 Invalid password.\n
 ```
 
+Requires: User must first issue the USER command
 
 ###IBUTTON
 
@@ -94,6 +97,8 @@ OK: <num credits>\n
 ```
 ERR 207 Invalid Ibutton\n
 ```
+
+Requires: nothing
 
 ###MACHINE
 
@@ -122,6 +127,8 @@ OK: Welcome to <machine name(string)>\n
 ERR 414 Invalid machine name - USAGE: MACHINE < d | ld | s >\n
 ```
 
+Requires: nothing
+
 ###STAT
 
 Returns a new-line seperated string of slots for a selected machine.
@@ -145,6 +152,33 @@ OK <total slots(int)> Slots retrieved\n
 - Failure:
 
 ```
-ERR 416 Machine is offline or unreachable
+ERR 416 Machine is offline or unreachable\n
 ```
 
+Requires: A machine needs to be selected and said machine must be online.
+
+###GETBALANCE
+
+Returns the number of credits a user has.
+
+Command:
+
+```
+GETBALANCE\n
+```
+
+Response:
+
+- Success:
+
+```
+OK: <num credits(int)>\n
+```
+
+- Failure:
+
+```
+ERR 204 You need to login.\n
+```
+
+Requires: A valid, authenticated user
