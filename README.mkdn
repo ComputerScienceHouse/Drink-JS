@@ -54,31 +54,48 @@ OK:\n
 
 Command:
 
-```PASS <password>\n```
+```
+PASS <password>\n
+```
 
 Response:
 
     - Success:
-        ```OK: <num credits>\n```
+        ```
+		OK: <num credits>\n
+		```
 
     - Failure:
-        ```ERR 407 Invalid password.\n```
+        ```
+		ERR 407 Invalid password.\n
+		```
 
 
 ###IBUTTON
+
 Command:
 
-```IBUTTON <ibutton>\n```
+```
+IBUTTON <ibutton>\n
+```
 
 Response:
 
-- Success: ```OK: <num credits>\n```
-- Failure: ```ERR 207 Invalid Ibutton\n```
+- Success: ```
+			OK: <num credits>\n
+			```
+
+- Failure: ```
+			ERR 207 Invalid Ibutton\n
+			```
 
 ###MACHINE
+
 Command:
 
-```MACHINE <machine alias>\n```
+```
+MACHINE <machine alias>\n
+```
 
 - Machine aliases:
     - ld
@@ -87,6 +104,10 @@ Command:
 
 Response:
 
-- Success: ```OK: Welcome to *drink machine name*\n```
+- Success: ```
+			OK: Welcome to *drink machine name*\n
+			```
 
-- Failure: ```ERR 414 Invalid machine name - USAGE: MACHINE < d | ld | s >\n```
+- Failure: ```
+			ERR 414 Invalid machine name - USAGE: MACHINE < d | ld | s >\n
+			```
