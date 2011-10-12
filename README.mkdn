@@ -113,7 +113,7 @@ Response:
 - Success: 
 
 ```
-OK: Welcome to *drink machine name*\n
+OK: Welcome to <machine name(string)>\n
 ```
 
 - Failure: 
