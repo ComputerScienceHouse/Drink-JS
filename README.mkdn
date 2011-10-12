@@ -121,3 +121,30 @@ OK: Welcome to *drink machine name*\n
 ```
 ERR 414 Invalid machine name - USAGE: MACHINE < d | ld | s >\n
 ```
+
+###STAT
+
+Returns a new-line seperated string of slots for a selected machine.
+
+Command:
+
+```
+STAT\n
+```
+
+Response:
+
+- Success:
+
+```
+<slot num(int)> <slot name(string)> <slot price(int)> <num available(int)> <slot status(bool)>\n
+...
+OK <total slots(int)> Slots retrieved\n
+```
+
+- Failure:
+
+```
+ERR 416 Machine is offline or unreachable
+```
+
