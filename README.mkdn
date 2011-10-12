@@ -61,11 +61,13 @@ PASS <password>\n
 Response:
 
 - Success:
+
 ```
 OK: <num credits>\n
 ```
 
 - Failure:
+
 ```
 ERR 407 Invalid password.\n
 ```
@@ -81,13 +83,17 @@ IBUTTON <ibutton>\n
 
 Response:
 
-- Success: ```
-			OK: <num credits>\n
-			```
+- Success: 
 
-- Failure: ```
-			ERR 207 Invalid Ibutton\n
-			```
+```
+OK: <num credits>\n
+```
+
+- Failure: 
+
+```
+ERR 207 Invalid Ibutton\n
+```
 
 ###MACHINE
 
@@ -104,10 +110,14 @@ MACHINE <machine alias>\n
 
 Response:
 
-- Success: ```
-			OK: Welcome to *drink machine name*\n
-			```
+- Success: 
 
-- Failure: ```
-			ERR 414 Invalid machine name - USAGE: MACHINE < d | ld | s >\n
-			```
+```
+OK: Welcome to *drink machine name*\n
+```
+
+- Failure: 
+
+```
+ERR 414 Invalid machine name - USAGE: MACHINE < d | ld | s >\n
+```
