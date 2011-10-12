@@ -37,15 +37,21 @@ Sunday Protocol
 ---
 
 ###USER
+
 Command:
 
-```USER <username>\n```
+```
+USER <username>\n
+```
 
 Response:
 
-```OK:\n```
+```
+OK:\n
+```
 
 ###PASS
+
 Command:
 
 ```PASS <password>\n```
