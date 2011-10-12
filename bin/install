@@ -6,7 +6,7 @@ npm install colors
 # https://github.com/felixge/node-mysql
 npm install mysql
 
-#https://github.com/visionmedia/express
+# https://github.com/visionmedia/express
 npm install express
 
 # https://github.com/LearnBoost/socket.io

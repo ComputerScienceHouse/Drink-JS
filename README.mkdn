@@ -7,6 +7,9 @@ Deps
     - node-LDAP (https://github.com/jeremycx/node-LDAP.git)
     - colors (https://github.com/Marak/colors.js)
     - mysql (https://github.com/felixge/node-mysql)
+	- express (https://github.com/visionmedia/express)
+	- Socket.io (https://github.com/LearnBoost/socket.io)
+	- Socket.io-client (https://github.com/LearnBoost/socket.io-client)
 
 Configs
 ---
@@ -65,7 +68,7 @@ Response:
 - Success:
 
 ```
-OK: <num credits>\n
+OK: <num credits(int)>\n
 ```
 
 - Failure:
@@ -89,7 +92,7 @@ Response:
 - Success: 
 
 ```
-OK: <num credits>\n
+OK: <num credits(int)>\n
 ```
 
 - Failure: 
