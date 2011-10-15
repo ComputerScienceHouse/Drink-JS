@@ -442,6 +442,39 @@ SundayServer.prototype = {
             self.send_msg_code('414', socket, ' - USAGE: MACHINE < d | ld | s >');
         }
     },
+    /**
+     * Send credits to another user
+     *
+     * @param command
+     * @param socket
+     * @param conn
+     */
+    SENDCREDITS: function(command, socket, conn){
+        var self = this;
+
+        if(command.length != 3){
+            self.send_msg_code('206', socket, ' - USAGE: SENDCREDITS <username> <num credits>');
+            return;
+        }
+
+        if(conn.authenticated == false){
+            self.send_msg_code('204', socket);
+            return;
+        }
+
+        // check to see that the credit amount is a number
+        var credits = parseInt(command[2]);
+        if(isNaN(drop_slot)){
+            self.send_msg_code('206', socket, ' - USAGE: SENDCREDITS <username> <num credits>');
+            return;
+        }
+
+        if(conn.balance >= credits){
+
+        } else {
+            self.send_msg_code('203', socket);
+        }
+    },
     QUIT: function(command, socket, conn){
         socket.end("Good Bye\r\n");
     },

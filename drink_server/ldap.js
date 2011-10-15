@@ -197,6 +197,13 @@ LDAPHandler.prototype = {
                 self.close();
             }
         });
+    },
+    transfer_credits: function(send_uid, recv_uid, credits, callback){
+        var self = this;
+        self.connect();
+
+        self.update_balance(send_uid, )
+
     }
 };
 

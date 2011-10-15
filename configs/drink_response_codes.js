@@ -33,5 +33,7 @@ exports.codes = {
     "413": 'ERR 413 No machine selected.',
     "414": 'ERR 414 Invalid machine name',
     "415": 'ERR 415 Invalid command',
-    "416": 'ERR 416 Machine is offline or unreachable'
+    "416": 'ERR 416 Machine is offline or unreachable',
+    "417": 'ERR 417 User doesnt exist.',
+    "418": 'ERR 418 Could not send money to user'
 }
