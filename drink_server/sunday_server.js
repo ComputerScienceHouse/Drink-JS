@@ -280,7 +280,7 @@ SundayServer.prototype = {
                     if(slot.available > 0 && slot.status == 'enabled'){
                         
                         //check to see if user has the funds
-                        if(parseInt(conn.balance) >= parseInt(slot.price)){
+                        if(parseInt(conn.balance) >= parseInt(slot.item_price)){
 
                             self.machine_server.machines[conn.current_machine].machine_inst.DROP(drop_slot, drop_delay, function(drop_response){
 
@@ -301,7 +301,7 @@ SundayServer.prototype = {
                                             // log drop to drink db
                                             drink_db.get_machine_id_for_alias(conn.current_machine, function(machine_id){
                                                 if(machine_id != null){
-                                                    drink_db.log_drop(machine_id, conn.username, drop_slot, parseInt(slot.price), 'ok', function(res){
+                                                    drink_db.log_drop(machine_id, conn.username, drop_slot, parseInt(slot.item_price), 'ok', function(res){
                                                         self.send_msg_code('OK', socket, ' Dropping drink');
 
                                                         self.machine_server.machines[conn.current_machine].machine_inst.SLOT_STAT(drop_slot, function(response){
@@ -342,7 +342,7 @@ SundayServer.prototype = {
                             });
                             // drop that drink!!
 
-                            var new_balance = parseInt(conn.balance) - parseInt(slot.price);
+                            var new_balance = parseInt(conn.balance) - parseInt(slot.item_price);
 
                         } else {
                             // user is poor
@@ -396,7 +396,7 @@ SundayServer.prototype = {
 
                 for(var i = 0; i < stats.length; i++){
                     var status = (stats[i].status == 'enabled') ? 1 : 0;
-                    stat_string += stats[i].slot_num + ' "' + stats[i].name + '" ' + stats[i].price + ' ' + stats[i].available + ' ' + status + "\n";
+                    stat_string += stats[i].slot_num + ' "' + stats[i].item_name + '" ' + stats[i].item_price + ' ' + stats[i].available + ' ' + status + "\n";
                 }
 
                 stat_string += "OK " + stats.length + " Slots retrieved";

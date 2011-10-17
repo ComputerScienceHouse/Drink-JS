@@ -58,7 +58,7 @@ Drink_DB.prototype = {
 
         self.get_machine_id_for_alias(machine_alias, function(machine_id){
             if(machine_id != null){
-                var sql = "SELECT * FROM slots WHERE machine_id=" + machine_id + " AND slot_num=" + slot_num;
+                var sql = "SELECT * FROM slots LEFT JOIN drink_items USING(item_id) WHERE machine_id=" + machine_id + " AND slot_num=" + slot_num;
                 self.client.query(sql, function(err, results, fields){
                     if(err == null){
                         if(results.length > 0){
@@ -130,7 +130,7 @@ Drink_DB.prototype = {
 
         self.get_machine_id_for_alias(machine_alias, function(machine_id){
             if(machine_id != null){
-                self.client.query("SELECT * FROM slots WHERE machine_id=" + machine_id + " ORDER BY slot_num ASC", function(err, results, fields){
+                self.client.query("SELECT * FROM slots LEFT JOIN drink_items USING(item_id) WHERE machine_id=" + machine_id + " ORDER BY slot_num ASC", function(err, results, fields){
                     callback(err, results);
                 });
             } else {

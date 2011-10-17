@@ -202,7 +202,7 @@ LDAPHandler.prototype = {
         var self = this;
         self.connect();
 
-        self.update_balance(send_uid, )
+        //self.update_balance(send_uid, )
 
     }
 };
