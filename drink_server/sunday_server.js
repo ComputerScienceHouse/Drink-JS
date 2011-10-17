@@ -301,7 +301,7 @@ SundayServer.prototype = {
                                             // log drop to drink db
                                             drink_db.get_machine_id_for_alias(conn.current_machine, function(machine_id){
                                                 if(machine_id != null){
-                                                    drink_db.log_drop(machine_id, conn.username, drop_slot, parseInt(slot.item_price), 'ok', function(res){
+                                                    drink_db.log_drop(machine_id, conn.username, drop_slot, slot.item_id, parseInt(slot.item_price), 'ok', function(res){
                                                         self.send_msg_code('OK', socket, ' Dropping drink');
 
                                                         self.machine_server.machines[conn.current_machine].machine_inst.SLOT_STAT(drop_slot, function(response){
