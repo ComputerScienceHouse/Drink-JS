@@ -1,16 +1,16 @@
 #!/bin/sh
 
 # https://github.com/Marak/colors.js
-npm -g install colors
+npm install --global colors
 
 # https://github.com/felixge/node-mysql
-npm -g install mysql
+npm install --global mysql
 
 # https://github.com/visionmedia/express
-npm -g install express
+npm install --global express
 
 # https://github.com/LearnBoost/socket.io
-npm -g install socket.io
+npm install --global socket.io
 
 # https://github.com/LearnBoost/socket.io-client
-npm -g install socket.io-client
+npm install --global socket.io-client
