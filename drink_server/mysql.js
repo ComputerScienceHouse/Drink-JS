@@ -91,13 +91,13 @@ Drink_DB.prototype = {
             }
         )
     },
-    log_drop: function(machine_id, uid, slot_num, drink_price, status, callback){
+    log_drop: function(machine_id, uid, slot_num, item_id, drink_price, status, callback){
         var self = this;
         self.client.query("INSERT INTO money_log(username, admin, amount, direction, reason) " +
                                 "VALUES('" + uid + "', 'drink', " + (drink_price * -1) + ", 'out', 'drop')");
         
-        self.client.query("INSERT INTO drop_log(machine_id, slot, username, status) " +
-            "VALUES(" + machine_id + ", " + slot_num + ", '" + uid + "', '" + status + "')",
+        self.client.query("INSERT INTO drop_log(machine_id, slot, username, status, item_id, current_item_price) " +
+            "VALUES(" + machine_id + ", " + slot_num + ", '" + uid + "', '" + status + "', " + item_id + ", " + drink_price + ")",
             function(err, results, fields){
                 if(err == null){
                     // decrement from slot
