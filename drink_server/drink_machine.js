@@ -25,6 +25,32 @@ function DrinkMachine(parameters){
     self.recv_msg = '';
 
     sys.puts(self.machine_time().cyan + ' - ' + self.socket.remoteAddress);
+
+    // when the tini connects, check the slots to see if the counts in the db are correct
+    drink_db.get_machine_id_for_alias(self.machine.machine_id, function(machine_id){
+        drink_db.get_stat_for_machine(self.machine.machine_id, function(err, stats){
+            for(var i = 0; i < stats.length; i++){
+                var slot_num = stats[i].slot_num;
+                var available = stats[i].available;
+
+                // get the slot status from the tini
+                self.SLOT_STAT(slot_num, function(response){
+                    // compare slot in db to tini results
+                    if(response[1] == 1 && available < 1){
+                        // set slot count to 1
+                        drink_db.update_slot_count(machine_id, slot_num, 1, function(results){
+
+                        });
+                    } else if(response[1] == 0 && available != 0){
+                        // set slot count to 0
+                        drink_db.update_slot_count(machine_id, slot_num, 0, function(results){
+
+                        });
+                    }
+                });
+            }
+        });
+    });
 }
 
 DrinkMachine.prototype = {
@@ -167,6 +193,10 @@ DrinkMachine.prototype = {
 
         self.timeout_id = null;
 
+        // send timeout to client here?
+
+        self.requesting = false;
+
         self.process_queue();
     },
     prep_command: function(command_exec, response_callback, data){
@@ -186,6 +216,8 @@ DrinkMachine.prototype = {
             sys.puts(self.machine_time().grey + ' - System busy, queing command'.grey);
             self.request_queue.push({command: command_exec, data: data, callback: response_callback});
         }
+
+
     },
     /**
      * Get the status for all slots
@@ -194,6 +226,9 @@ DrinkMachine.prototype = {
      */
     SLOT_STAT: function(slot_num, callback){
         var self = this;
+
+        // TODO stat command is conly supposed to be a 6\n, not 6 <slotnum>\n. This either needs to change
+        // here or needs to be changed on the tini.
 
         var response_callback = function(response){
             callback(response);
@@ -206,7 +241,7 @@ DrinkMachine.prototype = {
                 // send some kind of error code
                 util.print_error('Tini timeout', 'SLOT_STAT');
 
-                self.process_queue();
+                self.clear_timeout();
 
             }, self.TIMEOUT);
         }
@@ -230,15 +265,14 @@ DrinkMachine.prototype = {
         var command_exec = function(data){
             data.delay = data.delay * 1000;
             sys.puts(self.machine_time().cyan + ' - Delaying ' + data.delay + 'ms');
-            console.log("3" + data.slot + "\n");
-            self.socket.write("3" + data.slot + "\n");
-            
-            self.timeout_id = setTimeout(function(){
 
+            
+            setTimeout(function(){
+                self.socket.write("3" + data.slot + "\n");
                 self.timeout_id = setTimeout(function(){
                     // tini timed out, log to console, send error code, then continue processing queue
                     util.print_error('Tini timeout', 'DROP');
-                    self.process_queue();
+                    self.clear_timeout();
                     callback('5');
                 }, self.TIMEOUT);
 

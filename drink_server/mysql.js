@@ -38,8 +38,10 @@ Drink_DB.prototype = {
     },
     get_machine_id_for_alias: function(alias, callback){
         var self = this;
+        var sql = "SELECT machine_id FROM machine_aliases WHERE alias='" + alias + "'";
+        console.log(sql);
 
-        self.client.query("SELECT machine_id FROM machine_aliases WHERE alias='" + alias + "'", function(err, results, fields){
+        self.client.query(sql, function(err, results, fields){
             if(err == null){
                 if(results.length > 0){
                     callback(results[0].machine_id);
@@ -59,6 +61,7 @@ Drink_DB.prototype = {
         self.get_machine_id_for_alias(machine_alias, function(machine_id){
             if(machine_id != null){
                 var sql = "SELECT * FROM slots LEFT JOIN drink_items USING(item_id) WHERE machine_id=" + machine_id + " AND slot_num=" + slot_num;
+                console.log(sql);
                 self.client.query(sql, function(err, results, fields){
                     if(err == null){
                         if(results.length > 0){
@@ -80,29 +83,34 @@ Drink_DB.prototype = {
     },
     update_slot_count: function(machine_id, slot_num, count, callback){
         var self = this;
-
-        self.client.query("UPDATE slots SET available=" + count + " WHERE slot_num=" + slot_num + " AND machine_id=" + machine_id,
-            function(err, results, fields){
-                if(err == null){
-                    callback(results);
-                } else {
-                    callback(null);
-                }
+        var sql = "UPDATE slots SET available=" + count + " WHERE slot_num=" + slot_num + " AND machine_id=" + machine_id;
+        self.client.query(sql, function(err, results, fields){
+            if(err == null){
+                callback(results);
+            } else {
+                callback(null);
             }
-        )
+        });
     },
     log_drop: function(machine_id, uid, slot_num, item_id, drink_price, status, callback){
         var self = this;
-        self.client.query("INSERT INTO money_log(username, admin, amount, direction, reason) " +
-                                "VALUES('" + uid + "', 'drink', " + (drink_price * -1) + ", 'out', 'drop')");
-        
-        self.client.query("INSERT INTO drop_log(machine_id, slot, username, status, item_id, current_item_price) " +
-            "VALUES(" + machine_id + ", " + slot_num + ", '" + uid + "', '" + status + "', " + item_id + ", " + drink_price + ")",
+        var money_sql = "INSERT INTO money_log(username, admin, amount, direction, reason) " +
+                                "VALUES('" + uid + "', 'drink', " + (drink_price * -1) + ", 'out', 'drop')";
+
+        console.log(money_sql);
+        self.client.query(money_sql);
+
+        var sql = "INSERT INTO drop_log(machine_id, slot, username, status, item_id, current_item_price) " +
+            "VALUES(" + machine_id + ", " + slot_num + ", '" + uid + "', '" + status + "', " + item_id + ", " + drink_price + ")";
+
+        self.client.query(sql,
             function(err, results, fields){
                 if(err == null){
                     // decrement from slot
-                    self.client.query("UPDATE slots SET available = available - 1 " +
-                        "WHERE machine_id=" + machine_id + " AND slot_num=" + slot_num,
+                    var update_sql = "UPDATE slots SET available = available - 1 " +
+                        "WHERE machine_id=" + machine_id + " AND slot_num=" + slot_num;
+                    console.log(update_sql);
+                    self.client.query(update_sql,
                         function(err, results, fields){
                             if(err == null){
                                 callback(true);
@@ -121,7 +129,8 @@ Drink_DB.prototype = {
         var self = this;
         self.get_machine_id_for_alias(machine_alias, function(machine_id){
             if(machine_id != null){
-                self.client.query("INSERT INTO temperature_log(machine_id, temp) VALUES(" + machine_id + ", " + temp + ")");
+                var temp_sql = "INSERT INTO temperature_log(machine_id, temp) VALUES(" + machine_id + ", " + temp + ")";
+                self.client.query(temp_sql);
             }
         });
     },
@@ -130,7 +139,9 @@ Drink_DB.prototype = {
 
         self.get_machine_id_for_alias(machine_alias, function(machine_id){
             if(machine_id != null){
-                self.client.query("SELECT * FROM slots LEFT JOIN drink_items USING(item_id) WHERE machine_id=" + machine_id + " ORDER BY slot_num ASC", function(err, results, fields){
+                var machine_sql = "SELECT * FROM slots LEFT JOIN drink_items USING(item_id) WHERE machine_id=" + machine_id + " ORDER BY slot_num ASC";
+                console.log(machine_sql);
+                self.client.query(machine_sql, function(err, results, fields){
                     callback(err, results);
                 });
             } else {

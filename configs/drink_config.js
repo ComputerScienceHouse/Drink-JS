@@ -3,7 +3,7 @@
  */
 exports.config = {
     machine_server: {
-        host: 'erlang.csh.rit.edu',
+        host: '0.0.0.0',
         port: 4343
     },
     tini_ips: {

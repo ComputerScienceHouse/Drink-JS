@@ -146,8 +146,9 @@ t_process = Thread.new do
 					end
 				when OPCODE_TINI_SLOT_STATUS
 					slot = payload.to_i
-					status = (rand() + 0.5).to_i
-					puts "Requested slot #{slot} status"
+					#status = (rand() + 0.5).to_i
+					status = 1
+                    puts "Requested slot #{slot} status"
 					puts "Sending status (#{status}) for slot (#{slot})"
 					socket.send("#{OPCODE_SERVER_SLOT_STATUS} #{slot} #{status}\n", 0)
 				else

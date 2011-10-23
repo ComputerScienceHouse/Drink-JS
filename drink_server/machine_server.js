@@ -34,7 +34,7 @@ MachineServer.prototype = {
             conn.authenticated = false;
             
             socket.on('connect', function(){
-                console.log(socket.remoteAddress);
+                sys.puts(self.machine_time().cyan + ' - Tini connecting from ' + socket.remoteAddress);
                 if(socket.remoteAddress in self.tini_ips){
                     var machine_id = self.tini_ips[socket.remoteAddress];
                     if(self.machines[machine_id].connected == false){
@@ -46,6 +46,7 @@ MachineServer.prototype = {
                         self.machines[machine_id].machine_inst = new machine.server(conn);
                     }
                 } else {
+                    sys.puts(self.machine_time().gray + (' - Invalid IP address for tini ' + socket.remoteAddress).gray);
                     socket.write("2\n");
                 }
             });
