@@ -23,7 +23,7 @@ io.sockets.on('connection', function(socket){
     
     // connect to the sunday server
     conn.drink_conn = new net.Socket();
-    conn.drink_conn.connect(4242, 'drink.csh.rit.edu', function(){
+    conn.drink_conn.connect(4242, 'drinkjs.csh.rit.edu', function(){
         
     });
 
@@ -75,11 +75,13 @@ io.sockets.on('connection', function(socket){
 
     socket.on('machine', function(data){
         console.log("MACHINE");
+        console.log(data);
         var callback = function(recv_data){
             socket.emit('machine_recv', recv_data);
         }
 
         var command = function(){
+            console.log("Machine id = " + data.machine_id);
             conn.drink_conn.write("MACHINE " + data.machine_id + "\n");
         }
 

@@ -34,7 +34,6 @@ MachineServer.prototype = {
             conn.authenticated = false;
             
             socket.on('connect', function(){
-                console.log(socket.remoteAddress);
                 if(socket.remoteAddress in self.tini_ips){
                     var machine_id = self.tini_ips[socket.remoteAddress];
                     if(self.machines[machine_id].connected == false){

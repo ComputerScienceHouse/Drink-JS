@@ -167,6 +167,10 @@ DrinkMachine.prototype = {
 
         self.timeout_id = null;
 
+        // send timeout to client here?
+
+        self.requesting = false;
+
         self.process_queue();
     },
     prep_command: function(command_exec, response_callback, data){
@@ -186,6 +190,8 @@ DrinkMachine.prototype = {
             sys.puts(self.machine_time().grey + ' - System busy, queing command'.grey);
             self.request_queue.push({command: command_exec, data: data, callback: response_callback});
         }
+
+
     },
     /**
      * Get the status for all slots
@@ -206,7 +212,7 @@ DrinkMachine.prototype = {
                 // send some kind of error code
                 util.print_error('Tini timeout', 'SLOT_STAT');
 
-                self.process_queue();
+                self.clear_timeout();
 
             }, self.TIMEOUT);
         }
@@ -230,15 +236,14 @@ DrinkMachine.prototype = {
         var command_exec = function(data){
             data.delay = data.delay * 1000;
             sys.puts(self.machine_time().cyan + ' - Delaying ' + data.delay + 'ms');
-            console.log("3" + data.slot + "\n");
-            self.socket.write("3" + data.slot + "\n");
-            
-            self.timeout_id = setTimeout(function(){
 
+            
+            setTimeout(function(){
+                self.socket.write("3" + data.slot + "\n");
                 self.timeout_id = setTimeout(function(){
                     // tini timed out, log to console, send error code, then continue processing queue
                     util.print_error('Tini timeout', 'DROP');
-                    self.process_queue();
+                    self.clear_timeout();
                     callback('5');
                 }, self.TIMEOUT);
 
