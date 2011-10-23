@@ -25,6 +25,32 @@ function DrinkMachine(parameters){
     self.recv_msg = '';
 
     sys.puts(self.machine_time().cyan + ' - ' + self.socket.remoteAddress);
+
+    // when the tini connects, check the slots to see if the counts in the db are correct
+    drink_db.get_machine_id_for_alias(self.machine.machine_id, function(machine_id){
+        drink_db.get_stat_for_machine(self.machine.machine_id, function(err, stats){
+            for(var i = 0; i < stats.length; i++){
+                var slot_num = stats[i].slot_num;
+                var available = stats[i].available;
+
+                // get the slot status from the tini
+                self.SLOT_STAT(slot_num, function(response){
+                    // compare slot in db to tini results
+                    if(response[1] == 1 && available < 1){
+                        // set slot count to 1
+                        drink_db.update_slot_count(machine_id, slot_num, 1, function(results){
+
+                        });
+                    } else if(response[1] == 0 && available != 0){
+                        // set slot count to 0
+                        drink_db.update_slot_count(machine_id, slot_num, 0, function(results){
+
+                        });
+                    }
+                });
+            }
+        });
+    });
 }
 
 DrinkMachine.prototype = {
