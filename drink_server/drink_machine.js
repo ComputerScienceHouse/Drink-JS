@@ -26,31 +26,8 @@ function DrinkMachine(parameters){
 
     sys.puts(self.machine_time().cyan + ' - ' + self.socket.remoteAddress);
 
-    // when the tini connects, check the slots to see if the counts in the db are correct
-    drink_db.get_machine_id_for_alias(self.machine.machine_id, function(machine_id){
-        drink_db.get_stat_for_machine(self.machine.machine_id, function(err, stats){
-            for(var i = 0; i < stats.length; i++){
-                var slot_num = stats[i].slot_num;
-                var available = stats[i].available;
+    self.check_slot_availability();
 
-                // get the slot status from the tini
-                self.SLOT_STAT(slot_num, function(response){
-                    // compare slot in db to tini results
-                    if(response[1] == 1 && available < 1){
-                        // set slot count to 1
-                        drink_db.update_slot_count(machine_id, slot_num, 1, function(results){
-
-                        });
-                    } else if(response[1] == 0 && available != 0){
-                        // set slot count to 0
-                        drink_db.update_slot_count(machine_id, slot_num, 0, function(results){
-
-                        });
-                    }
-                });
-            }
-        });
-    });
 }
 
 DrinkMachine.prototype = {
@@ -65,8 +42,11 @@ DrinkMachine.prototype = {
             self.recv_msg += str_data;
 
             if(str_data[str_data.length - 1] == "\n"){
+                //console.log(self.recv_msg);
                 var raw = self.recv_msg;
-                var message = self.recv_msg.substr(0, self.recv_msg.length - 1).split(" ");
+                //var message = self.recv_msg.substr(0, self.recv_msg.length - 1).split(" ");
+                var message = self.recv_msg;
+                var payload = self.recv_msg.substr(0, self.recv_msg.length - 1);
                 self.recv_msg = '';
                 
                 // messages sent from tinis to server
@@ -115,9 +95,9 @@ DrinkMachine.prototype = {
                         //sys.puts(self.machine_time().blue + ' - slot statuses');
                         raw = raw.substr(1, raw.length).split('`');
                         for(var i = 0; i < raw.length; i++){
-                            raw[i] = raw[i].replace('\n', '').replace('\n', '');
+                            raw[i] = raw[i].replace('\n', '').replace('\n', '').split(" ");
                         }
-
+                        
                         if(self.request_callback){
                             self.request_callback(raw);
                         }
@@ -235,8 +215,8 @@ DrinkMachine.prototype = {
         }
 
         var command_exec = function(data){
-            self.socket.write("6 " + slot_num + "\n");
-
+            //self.socket.write("6 " + slot_num + "\n");
+            self.socket.write("6\n");
             self.timeout_id = setTimeout(function(){
                 // send some kind of error code
                 util.print_error('Tini timeout', 'SLOT_STAT');
@@ -280,6 +260,35 @@ DrinkMachine.prototype = {
         }
 
         self.prep_command(command_exec, response_callback, {delay: delay, slot: slot});
+    },
+    check_slot_availability: function(){
+        var self = this;
+        drink_db.get_machine_id_for_alias(self.machine.machine_id, function(machine_id){
+            drink_db.get_stat_for_machine(self.machine.machine_id, function(err, db_slots){
+                // get the stats for the slots from the tini
+                self.SLOT_STAT(1, function(tini_slots){
+
+                    for(var i = 0; i < tini_slots.length; i++){
+                        var tini_data = tini_slots[i];
+                        var db_data = db_slots[i];
+
+                        var slot_num = tini_data[0];
+
+                        if(tini_data[1] == 1 && db_data.available < 1){
+                            // set slot count to 1
+                            drink_db.update_slot_count(machine_id, slot_num, 1, function(results){
+                                //console.log("updated " + slot_num + " to 1");
+                            });
+                        } else if(tini_data[1] == 0 && db_data.available != 0){
+                            // set slot count to 0
+                            drink_db.update_slot_count(machine_id,  slot_num, 0, function(results){
+                                //console.log("updated " + slot_num + " to 0");
+                            });
+                        }
+                    }
+                });
+            });
+        });
     }
 };
 

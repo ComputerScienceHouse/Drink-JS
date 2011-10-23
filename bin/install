@@ -13,10 +13,10 @@ npm install --global express
 npm install --global socket.io
 
 # https://github.com/LearnBoost/socket.io-client
-npm install socket.io-client
+npm install --global socket.io-client
 
-npm install mongodb --mongodb:native
+npm install --global mongodb --mongodb:native
 
 # https://github.com/idottv/node-mongodb-wrapper
-npm install mongodb-wrapper
+npm install --global mongodb-wrapper
 
