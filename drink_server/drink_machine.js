@@ -227,6 +227,9 @@ DrinkMachine.prototype = {
     SLOT_STAT: function(slot_num, callback){
         var self = this;
 
+        // TODO stat command is conly supposed to be a 6\n, not 6 <slotnum>\n. This either needs to change
+        // here or needs to be changed on the tini.
+
         var response_callback = function(response){
             callback(response);
         }
