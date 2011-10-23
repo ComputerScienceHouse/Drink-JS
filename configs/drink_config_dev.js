@@ -53,6 +53,16 @@ exports.config = {
         "ld": "Little Drink",
         "d": "Big Drink",
         "s": "Snack"
+    },
+    logging: {
+        stdout: true,
+        db: true,
+        file: true,
+        db_data: {
+            host: 'seanmcgary.com',
+            port: 27017,
+            db: 'drink_log'
+        }
     }
 }
 

@@ -4,12 +4,14 @@ var colors = require('colors');
 var util = require('./util.js').util;
 var sys = require('sys');
 var drink_db = require('./mysql.js').DB;
+var logger = require('./logger.js').logger;
 
 
 function SundayServer(drink_config){
     var self = this;
 
-    sys.puts(self.sunday_time().cyan + ' - Sunday server created');
+    //sys.puts(self.sunday_time().cyan + ' - Sunday server created');
+    logger.log(self.sunday_time().cyan + ' - Sunday server created', 0);
 
     for(var i in drink_config.sunday){
         if(!(i in self)){

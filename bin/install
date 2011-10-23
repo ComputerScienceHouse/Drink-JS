@@ -14,3 +14,8 @@ npm install socket.io
 
 # https://github.com/LearnBoost/socket.io-client
 npm install socket.io-client
+
+npm install mongodb --mongodb:native
+
+# https://github.com/idottv/node-mongodb-wrapper
+npm install mongodb-wrapper

@@ -12,6 +12,9 @@ exports.util = {
     get_time: function() {
 	    return new Date().toUTCString();
     },
+    get_unix_time: function(){
+        return parseInt(new Date().getTime() / 1000);
+    },
     print_error: function(error_msg, location){
         var self = this;
         sys.puts((self.get_time() + ' (' + location + ')').red + ' - ' + (error_msg).grey);
@@ -24,7 +27,7 @@ exports.util = {
         
         if(typeof process.env.DRINK_ENV != 'undefined'){
             if(process.env.DRINK_ENV == 'dev'){
-                sys.puts((self.get_time() + ' - ').magenta + 'Running in dev mode');
+                //sys.puts((self.get_time() + ' - ').magenta + 'Running in dev mode');
                 return require('../configs/drink_config_dev.js').config;
             } else {
                 return require('../configs/drink_config.js').config;
