@@ -2,9 +2,11 @@ var colors = require('colors');
 var util = require('./util.js').util;
 var sys = require('sys');
 var mongo = require('mongodb-wrapper');
+var LDAPHandler = require('./ldap.js').LDAPHandler;
 
 function Logger(){
     var self = this;
+
 
     var config = util.get_config().logging;
 
@@ -19,9 +21,50 @@ function Logger(){
     } else {
         self.db_config = null;
     }
+
+    self.websocket_running = false;
+
+    self.setup_websocket();
 };
 
 Logger.prototype = {
+    setup_websocket: function(){
+        var self = this;
+        self.log([{msg: self.get_time(), color: 'yellow'}, {msg: ' - Starting logging websocket', color: null}], 0);
+
+        //set up the live logging websocket server
+        self.io = require('socket.io');
+        var express = require('express');
+
+        var app = express.createServer();
+
+        self.io = self.io.listen(app);
+
+        self.io.set('log level', 0);
+
+        self.io.sockets.on('connection', function(socket){
+
+
+            socket.on('auth_drink_admin', function(data){
+                var ldap_handler = new LDAPHandler(self);
+
+                ldap_handler.auth_ibutton(data.ibutton, function(user_data){
+                    if(user_data != false && user_data.drink_admin == 1){
+                        socket.join('logger');
+                        socket.emit('auth_drink_admin_res', {status: true});
+                    } else {
+                        socket.emit('auth_drink_admin_res', {status: false});
+                    }
+                });
+            })
+        });
+
+
+
+        app.listen(8081);
+
+        self.websocket_running = true;
+    },
     get_time: function() {
 	    return new Date().toUTCString();
     },
@@ -78,6 +121,12 @@ Logger.prototype = {
         }
 
         //console.log(stdout_string);
+
+        // send to the websocket
+
+        if(self.websocket_running){
+            self.io.sockets.in('logger').emit('log_message', {msg: log_string});
+        }
 
         if(self.stdout == true){
             // print to stdout
