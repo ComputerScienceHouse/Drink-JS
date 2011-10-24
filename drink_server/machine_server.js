@@ -35,7 +35,7 @@ MachineServer.prototype = {
             conn.authenticated = false;
             
             socket.on('connect', function(){
-                self.logger.log(self.machine_time().cyan + ' - Tini connecting from ' + socket.remoteAddress);
+                self.logger.log([{msg: self.machine_time(), color: 'cyan'}, {msg: ' - Tini connecting from ' + socket.remoteAddress, color: null}], 0);
                 if(socket.remoteAddress in self.tini_ips){
                     var machine_id = self.tini_ips[socket.remoteAddress];
                     if(self.machines[machine_id].connected == false){
@@ -44,16 +44,16 @@ MachineServer.prototype = {
                         conn.machine = self.machines[machine_id];
                         conn.socket = socket;
 
-                        self.machines[machine_id].machine_inst = new machine.server(conn);
+                        self.machines[machine_id].machine_inst = new machine.server(conn, self.logger);
                     }
                 } else {
-                    self.logger.log(self.machine_time().gray + (' - Invalid IP address for tini ' + socket.remoteAddress).gray);
+                    self.logger.log([{msg: self.machine_time(), color: 'gray'}, {msg: ' - Invalid IP address for tini ' + socket.remoteAddress, color: 'gray'}], 0);
                     socket.write("2\n");
                 }
             });
         });
         self.server.listen(self.machine_config.port, self.machine_config.host);
-        self.logger.log(self.machine_time().cyan + ' - Initializing machine server ' + self.machine_config.host + ':' + self.machine_config.port);
+        self.logger.log([{msg: self.machine_time(), color: 'cyan'}, {msg: ' - Initializing machine server ' + self.machine_config.host + ':' + self.machine_config.port, color: null}], 0);
     },
     machine_time: function(){
         var self = this;

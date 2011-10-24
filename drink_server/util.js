@@ -19,9 +19,6 @@ exports.util = {
         var self = this;
         sys.puts((self.get_time() + ' (' + location + ')').red + ' - ' + (error_msg).grey);
     },
-    print_warn: function(warn_msg, location){
-        sys.puts((self.get_time() + ' (' + location + ')').yellow + ' - ' + (warn_msg).grey);
-    },
     get_config: function(){
         var self = this;
         

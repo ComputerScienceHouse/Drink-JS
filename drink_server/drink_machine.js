@@ -4,8 +4,10 @@ var util = require('./util.js').util;
 var sys = require('sys');
 var drink_db = require('./mysql.js').DB;
 
-function DrinkMachine(parameters){
+function DrinkMachine(parameters, logger){
     var self = this;
+
+    self.logger = logger;
     
     for(var i in parameters){
         if(!(i in self)){
@@ -24,7 +26,7 @@ function DrinkMachine(parameters){
 
     self.recv_msg = '';
 
-    sys.puts(self.machine_time().cyan + ' - ' + self.socket.remoteAddress);
+    self.logger.log([{msg: self.machine_time(), color: 'cyan'}, {msg:' - ' + self.socket.remoteAddress, color: null}], 0);
 
     self.check_slot_availability();
 
@@ -34,7 +36,7 @@ DrinkMachine.prototype = {
     init: function(){
         var self = this;
         
-        sys.puts(self.machine_time().cyan + ' - Initializing ' + self.machine.long_name + ' server');
+        self.logger.log([{msg: self.machine_time(), color: 'cyan'}, {msg:' - Initializing ' + self.machine.long_name + ' server', color: null}], 0);
 
         self.socket.on('data', function(data){
 
@@ -53,15 +55,14 @@ DrinkMachine.prototype = {
                 switch(message[0]){
                     // 0 <password (string)>\n - login with password
                     case "0":
-                        sys.puts(self.machine_time().blue + ' - Authenticated');
+                        self.logger.log([{msg: self.machine_time(), color: 'blue'}, {msg: ' - Authenticated', color: null}], 0);
                         self.machine_authenticated = true;
                         self.socket.write("1\n");
                         break;
 
                     // 4\n - drop ack
                     case "4":
-
-                        sys.puts(self.machine_time().blue + ' - Drop ack');
+                        self.logger.log([{msg: self.machine_time(), color: 'blue'}, {msg: ' - Drop ack', color: null}], 0);
 
                         self.request_callback(raw);
                         self.requesting = false;
@@ -73,15 +74,13 @@ DrinkMachine.prototype = {
 
                     // 8 <temp(double)>\n - send temp
                     case "8":
-                        //sys.puts(self.machine_time().blue + ' - Temp:' + message[1]);
-
                         drink_db.log_temp(self.machine.machine_id, message[1]);
 
                         break;
 
                     // 5\n - drop nack
                     case "5":
-                        sys.puts(self.machine_time().blue + ' - Drop nack');
+                        self.logger.log([{msg: self.machine_time(), color: 'blue'}, {msg: ' - Drop nack', color: null}], 0);
 
                         self.request_callback(raw);
                         self.requesting = false;
@@ -92,7 +91,7 @@ DrinkMachine.prototype = {
 
                     // 7 <slot(int)> <empty(int)>\n || 7 <slot(int)> <empty(int)> <slot(int)> <empty(int)>\n - stat for slot(s)
                     case "7":
-                        //sys.puts(self.machine_time().blue + ' - slot statuses');
+
                         raw = raw.substr(1, raw.length).split('`');
                         for(var i = 0; i < raw.length; i++){
                             raw[i] = raw[i].replace('\n', '').replace('\n', '').split(" ");
@@ -118,25 +117,25 @@ DrinkMachine.prototype = {
         });
 
         self.socket.on('close', function(){
-            sys.puts(self.machine_time().cyan + ' - Tini disconnected');
+            self.logger.log([{msg: self.machine_time(), color: 'cyan'}, {msg: ' - Tini disconnected', color: null}], 0);
             
             self.machine.connected = false;
         });
 
         self.socket.on('error', function(){
-            util.print_error('Tini error - connection terminated', 'drink_machine');
+            self.logger.log_error('Tini error - connection terminated', 'drink_machine');
 
             self.machine.connected = false;
         });
 
         self.socket.on('end', function(){
-            sys.puts(self.machine_time().cyan + ' - Tini ended');
+            self.logger.log([{msg: self.machine_time(), color: 'cyan'}, {msg: ' - Tini ended', color: null}], 0);
 
             self.machine.connected = false;
         });
 
         self.socket.on('timeout', function(){
-            util.print_error('Tini error - connection timed out', 'drink_machine');
+            self.logger.log_error('Tini error - connection timed out', 'drink_machine');
 
             self.machine.connected = false;
         });
@@ -151,7 +150,7 @@ DrinkMachine.prototype = {
 
         // check to see if anything is in the queue
         if(self.request_queue.length > 0){
-            sys.puts(self.machine_time().cyan + ' - Processing request queue...');
+            self.logger.log([{msg: self.machine_time(), color: 'cyan'}, {msg: ' - Processing request queue...', color: null}], 0);
 
             // pop the top command off the queue
             var request = self.request_queue.pop();
@@ -187,13 +186,15 @@ DrinkMachine.prototype = {
         }
 
         if(self.requesting == false){
-            sys.puts(self.machine_time().grey + ' - Queue is empty, processing command'.grey);
+            self.logger.log([{msg: self.machine_time(), color: 'grey'}, {msg: '  - Queue is empty, processing command', color: 'grey'}], 0);
+            
             self.requesting = true;
             self.request_callback = response_callback;
 
             command_exec(data);
         } else {
-            sys.puts(self.machine_time().grey + ' - System busy, queing command'.grey);
+            self.logger.log([{msg: self.machine_time(), color: 'grey'}, {msg: ' - System busy, queing command', color: 'grey'}], 0);
+            
             self.request_queue.push({command: command_exec, data: data, callback: response_callback});
         }
 
@@ -244,8 +245,7 @@ DrinkMachine.prototype = {
 
         var command_exec = function(data){
             data.delay = data.delay * 1000;
-            sys.puts(self.machine_time().cyan + ' - Delaying ' + data.delay + 'ms');
-
+            self.logger.log([{msg: self.machine_time(), color: 'cyan'}, {msg: ' - Delaying ' + data.delay + 'ms', color: null}], 0);
             
             setTimeout(function(){
                 self.socket.write("3" + data.slot + "\n");

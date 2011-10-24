@@ -12,7 +12,7 @@ function SundayServer(drink_config, logger){
     self.logger = logger;
 
     //sys.puts(self.sunday_time().cyan + ' - Sunday server created');
-    self.logger.log_2([{msg:self.sunday_time(), color: 'cyan'}, {msg: ' - Sunday server created', color: null}], 0);
+    self.logger.log([{msg:self.sunday_time(), color: 'cyan'}, {msg: ' - Sunday server created', color: null}], 0);
 
     for(var i in drink_config.sunday){
         if(!(i in self)){
@@ -63,10 +63,10 @@ SundayServer.prototype = {
             conn.current_machine = null;
             conn.balance = null;
 
-            conn.ldap_handler = new LDAPHandler();
+            conn.ldap_handler = new LDAPHandler(self.logger);
 
             socket.on('connect', function(data){
-                self.logger.log_2([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - Client connected from ' + socket.remoteAddress, color: null}], 0);
+                self.logger.log([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - Client connected from ' + socket.remoteAddress, color: null}], 0);
 
                 var machine_name = 'Drink';
                 
@@ -108,7 +108,7 @@ SundayServer.prototype = {
         });
 
         self.server.listen(self.port, self.host);
-        self.logger.log_2([{msg: self.sunday_time(), color: 'cyan'}, {msg: ' - Sunday server running on ' + self.host + ':' + self.port, color: null}], 0);
+        self.logger.log([{msg: self.sunday_time(), color: 'cyan'}, {msg: ' - Sunday server running on ' + self.host + ':' + self.port, color: null}], 0);
     },
     /**
      * Sets a username to be authenticated
@@ -168,7 +168,7 @@ SundayServer.prototype = {
                 conn.username = result.username;
                 conn.balance = result.balance;
 
-                self.logger.log_2([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')', color: null}], 0);
+                self.logger.log([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')', color: null}], 0);
 
                 self.send_msg_code('OK', socket, conn.balance);
 
@@ -203,7 +203,7 @@ SundayServer.prototype = {
                 conn.username = result.username;
                 conn.balance = result.balance;
 
-                self.logger.log_2([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')');
+                self.logger.log([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')', color: null}], 0);
 
                 self.send_msg_code('OK', socket, conn.balance);
             } else {
@@ -236,7 +236,7 @@ SundayServer.prototype = {
 
         conn.ldap_handler.get_balance(conn.auth_type, credentials, function(balance){
             if(balance != false){
-                self.logger.log(self.sunday_time(conn).cyan + ' - GETBALANCE ' + conn.username + ' : ' + balance);
+                self.logger.log([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - GETBALANCE ' + conn.username + ' : ' + balance, color: null}], 0);
                 self.send_msg_code('OK', socket, balance);
             } else {
                 self.send_msg_code('204', socket);
@@ -374,7 +374,7 @@ SundayServer.prototype = {
     STAT: function(command, socket, conn){
         var self = this;
 
-        self.logger.log(self.sunday_time().cyan + ' - STAT');
+        self.logger.log([{msg: self.sunday_time(), color: 'cyan'}, {msg:' - STAT', color: null}], 0);
 
         drink_db.get_stat_for_machine(conn.current_machine, function(err, stats){
             if(err == null){
@@ -420,7 +420,7 @@ SundayServer.prototype = {
         if(command[1] in self.machine_server.machines){
             conn.current_machine = command[1];
 
-            self.logger.log(self.sunday_time(conn).cyan + ' - Changing machine to ' + self.machine_server.machines[command[1]].long_name);
+            self.logger.log([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - Changing machine to ' + self.machine_server.machines[command[1]].long_name, color: null}], 0);
 
             self.send_msg_code('OK', socket, ' Welcome to ' + self.machine_server.machines[command[1]].long_name);
 

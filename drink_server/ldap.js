@@ -3,9 +3,11 @@ var colors = require('colors');
 var util = require('./util.js').util;
 var sys = require('sys');
 
-function LDAPHandler(){
+function LDAPHandler(logger){
     var self = this;
-    sys.puts(self.ldap_time().cyan + ' - Creating LDAP handler...');
+    self.logger = logger;
+
+    self.logger.log([{msg: self.ldap_time(), color: 'cyan'}, {msg: ' - Creating LDAP handler...', color: null}], 0);
 }
 
 LDAPHandler.prototype = {
@@ -66,9 +68,6 @@ LDAPHandler.prototype = {
                 self.close();
             }
         });
-
-        
-        
     },
     /**
      * Authorize a user based on iButton. Search LDAP as drink user to find a user that the ibutton is associated with.

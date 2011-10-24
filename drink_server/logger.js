@@ -22,6 +22,9 @@ function Logger(){
 };
 
 Logger.prototype = {
+    get_time: function() {
+	    return new Date().toUTCString();
+    },
     set_stdout: function(val){
         var self = this;
 
@@ -37,7 +40,24 @@ Logger.prototype = {
 
         self.file = val;
     },
-    log_2: function(message, level){
+    log_error: function(error_msg, location){
+        var self = this;
+        self.log([{msg: self.get_time() + ' (' + location + ')', color: 'red'}, {msg: ' - ' + error_msg, color: 'grey'}], 3);
+    },
+    /**
+     *
+     * @param message   - The message (object) to log
+     *                  [{
+     *                      msg: <message (string)>,
+     *                      color: <color (string)>,
+     *                   },{}]
+     *
+     * @param level     - Levels of log messages
+     *                      - 0 Normal
+     *                      - 1 Warn
+     *                      - 3 Error
+     */
+    log: function(message, level){
         var self = this;
         
         var stdout_string = '';
@@ -66,39 +86,7 @@ Logger.prototype = {
         }
 
         if(self.db == true){
-            self.mongodb.logs.save({time_logged: util.get_unix_time(), message: log_string, log_leve: level}, function(err, post){
-
-            });
-        }
-
-        if(self.file == true){
-
-        }
-    },
-    /**
-     *
-     * @param message   - The message (object) to log
-     *                  [{
-     *                      msg: <message (string)>,
-     *                      color: <color (string)>,
-     *                   },{}]
-     *
-     * @param level     - Levels of log messages
-     *                      - 0 Normal
-     *                      - 1 Warn
-     *                      - 3 Error
-     */
-    log: function(message, level){
-        var self = this;
-
-        if(self.stdout == true){
-            // print to stdout
-            sys.puts(message);
-
-        }
-
-        if(self.db == true){
-            self.mongodb.logs.save({time_logged: util.get_unix_time(), message: message, log_leve: level}, function(err, post){
+            self.mongodb.logs.save({time_logged: util.get_unix_time(), message: log_string, log_level: level}, function(err, post){
 
             });
         }
