@@ -48,11 +48,11 @@ exports.config = {
         "s": "Snack"
     },
     logging: {
-        stdout: false,
+        stdout: true,
         db: true,
         file: true,
         db_data: {
-            host: 'seanmcgary.com',
+            host: 'localhost',
             port: 27017,
             db: 'drink_log'
         }

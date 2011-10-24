@@ -39,7 +39,6 @@ Drink_DB.prototype = {
     get_machine_id_for_alias: function(alias, callback){
         var self = this;
         var sql = "SELECT machine_id FROM machine_aliases WHERE alias='" + alias + "'";
-        console.log(sql);
 
         self.client.query(sql, function(err, results, fields){
             if(err == null){
@@ -61,7 +60,6 @@ Drink_DB.prototype = {
         self.get_machine_id_for_alias(machine_alias, function(machine_id){
             if(machine_id != null){
                 var sql = "SELECT * FROM slots LEFT JOIN drink_items USING(item_id) WHERE machine_id=" + machine_id + " AND slot_num=" + slot_num;
-                console.log(sql);
                 self.client.query(sql, function(err, results, fields){
                     if(err == null){
                         if(results.length > 0){
@@ -97,7 +95,6 @@ Drink_DB.prototype = {
         var money_sql = "INSERT INTO money_log(username, admin, amount, direction, reason) " +
                                 "VALUES('" + uid + "', 'drink', " + (drink_price * -1) + ", 'out', 'drop')";
 
-        console.log(money_sql);
         self.client.query(money_sql);
 
         var sql = "INSERT INTO drop_log(machine_id, slot, username, status, item_id, current_item_price) " +
@@ -109,7 +106,7 @@ Drink_DB.prototype = {
                     // decrement from slot
                     var update_sql = "UPDATE slots SET available = available - 1 " +
                         "WHERE machine_id=" + machine_id + " AND slot_num=" + slot_num;
-                    console.log(update_sql);
+
                     self.client.query(update_sql,
                         function(err, results, fields){
                             if(err == null){
@@ -140,7 +137,6 @@ Drink_DB.prototype = {
         self.get_machine_id_for_alias(machine_alias, function(machine_id){
             if(machine_id != null){
                 var machine_sql = "SELECT * FROM slots LEFT JOIN drink_items USING(item_id) WHERE machine_id=" + machine_id + " ORDER BY slot_num ASC";
-                console.log(machine_sql);
                 self.client.query(machine_sql, function(err, results, fields){
                     callback(err, results);
                 });

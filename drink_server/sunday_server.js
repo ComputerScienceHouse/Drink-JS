@@ -4,14 +4,15 @@ var colors = require('colors');
 var util = require('./util.js').util;
 var sys = require('sys');
 var drink_db = require('./mysql.js').DB;
-var logger = require('./logger.js').logger;
 
 
-function SundayServer(drink_config){
+function SundayServer(drink_config, logger){
     var self = this;
 
+    self.logger = logger;
+
     //sys.puts(self.sunday_time().cyan + ' - Sunday server created');
-    logger.log(self.sunday_time().cyan + ' - Sunday server created', 0);
+    self.logger.log(self.sunday_time().cyan + ' - Sunday server created', 0);
 
     for(var i in drink_config.sunday){
         if(!(i in self)){
@@ -65,7 +66,7 @@ SundayServer.prototype = {
             conn.ldap_handler = new LDAPHandler();
 
             socket.on('connect', function(data){
-                sys.puts(self.sunday_time(conn).cyan + ' - Client connected from ' + socket.remoteAddress);
+                self.logger.log(self.sunday_time(conn).cyan + ' - Client connected from ' + socket.remoteAddress);
 
                 var machine_name = 'Drink';
                 
@@ -107,7 +108,7 @@ SundayServer.prototype = {
         });
 
         self.server.listen(self.port, self.host);
-        sys.puts(self.sunday_time().cyan + ' - Sunday server running on ' + self.host + ':' + self.port);
+        self.logger.log(self.sunday_time().cyan + ' - Sunday server running on ' + self.host + ':' + self.port);
     },
     /**
      * Sets a username to be authenticated
@@ -167,7 +168,7 @@ SundayServer.prototype = {
                 conn.username = result.username;
                 conn.balance = result.balance;
 
-                sys.puts(self.sunday_time(conn).cyan + ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')');
+                self.logger.log(self.sunday_time(conn).cyan + ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')');
 
                 self.send_msg_code('OK', socket, conn.balance);
 
@@ -202,7 +203,7 @@ SundayServer.prototype = {
                 conn.username = result.username;
                 conn.balance = result.balance;
 
-                sys.puts(self.sunday_time(conn).cyan + ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')');
+                self.logger.log(self.sunday_time(conn).cyan + ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')');
 
                 self.send_msg_code('OK', socket, conn.balance);
             } else {
@@ -235,7 +236,7 @@ SundayServer.prototype = {
 
         conn.ldap_handler.get_balance(conn.auth_type, credentials, function(balance){
             if(balance != false){
-                sys.puts(self.sunday_time(conn).cyan + ' - GETBALANCE ' + conn.username + ' : ' + balance);
+                self.logger.log(self.sunday_time(conn).cyan + ' - GETBALANCE ' + conn.username + ' : ' + balance);
                 self.send_msg_code('OK', socket, balance);
             } else {
                 self.send_msg_code('204', socket);
@@ -373,7 +374,7 @@ SundayServer.prototype = {
     STAT: function(command, socket, conn){
         var self = this;
 
-        sys.puts(self.sunday_time().cyan + ' - STAT');
+        self.logger.log(self.sunday_time().cyan + ' - STAT');
 
         drink_db.get_stat_for_machine(conn.current_machine, function(err, stats){
             if(err == null){
@@ -419,7 +420,7 @@ SundayServer.prototype = {
         if(command[1] in self.machine_server.machines){
             conn.current_machine = command[1];
 
-            sys.puts(self.sunday_time(conn).cyan + ' - Changing machine to ' + self.machine_server.machines[command[1]].long_name);
+            self.logger.log(self.sunday_time(conn).cyan + ' - Changing machine to ' + self.machine_server.machines[command[1]].long_name);
 
             self.send_msg_code('OK', socket, ' Welcome to ' + self.machine_server.machines[command[1]].long_name);
 

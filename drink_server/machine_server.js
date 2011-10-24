@@ -11,10 +11,11 @@ var util = require('./util.js').util;
 var sys = require('sys');
 var machine = require('./drink_machine.js');
 
-function MachineServer(config, sunday_server){
+function MachineServer(config, sunday_server, logger){
     var self = this;
 
     self.sunday_serv = sunday_server;
+    self.logger = logger;
 
     self.machines = config.machines;
     self.machine_config = config.machine_server;
@@ -34,7 +35,7 @@ MachineServer.prototype = {
             conn.authenticated = false;
             
             socket.on('connect', function(){
-                sys.puts(self.machine_time().cyan + ' - Tini connecting from ' + socket.remoteAddress);
+                self.logger.log(self.machine_time().cyan + ' - Tini connecting from ' + socket.remoteAddress);
                 if(socket.remoteAddress in self.tini_ips){
                     var machine_id = self.tini_ips[socket.remoteAddress];
                     if(self.machines[machine_id].connected == false){
@@ -46,13 +47,13 @@ MachineServer.prototype = {
                         self.machines[machine_id].machine_inst = new machine.server(conn);
                     }
                 } else {
-                    sys.puts(self.machine_time().gray + (' - Invalid IP address for tini ' + socket.remoteAddress).gray);
+                    self.logger.log(self.machine_time().gray + (' - Invalid IP address for tini ' + socket.remoteAddress).gray);
                     socket.write("2\n");
                 }
             });
         });
         self.server.listen(self.machine_config.port, self.machine_config.host);
-        sys.puts(self.machine_time().cyan + ' - Initializing machine server ' + self.machine_config.host + ':' + self.machine_config.port);
+        self.logger.log(self.machine_time().cyan + ' - Initializing machine server ' + self.machine_config.host + ':' + self.machine_config.port);
     },
     machine_time: function(){
         var self = this;

@@ -14,7 +14,6 @@ function Logger(){
 
     if('db_data' in config){
         self.db_config = config.db_data;
-        console.log(self.db_config);
         self.mongodb = mongo.db(self.db_config.host, self.db_config.port, self.db_config.db);
         self.mongodb.collection('logs');
     } else {
@@ -38,9 +37,52 @@ Logger.prototype = {
 
         self.file = val;
     },
+    log_2: function(message, level){
+        var self = this;
+        
+        var stdout_string = '';
+        var log_string = '';
+
+        for(var i in message){
+            if(message[i].color == null){
+                message[i].color = 'white';
+            }
+
+
+            var str = message[i].msg;
+
+            stdout_string += str[message[i].color];
+            log_string += str;
+
+            //console.log(stdout_string);
+        }
+
+        //console.log(stdout_string);
+
+        if(self.stdout == true){
+            // print to stdout
+            sys.puts(stdout_string);
+
+        }
+
+        if(self.db == true){
+            self.mongodb.logs.save({time_logged: util.get_unix_time(), message: log_string, log_leve: level}, function(err, post){
+
+            });
+        }
+
+        if(self.file == true){
+
+        }
+    },
     /**
      *
-     * @param message   - The message to log (with or without color)
+     * @param message   - The message (object) to log
+     *                  [{
+     *                      msg: <message (string)>,
+     *                      color: <color (string)>,
+     *                   },{}]
+     *
      * @param level     - Levels of log messages
      *                      - 0 Normal
      *                      - 1 Warn

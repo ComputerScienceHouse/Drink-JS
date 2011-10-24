@@ -61,9 +61,9 @@ exports.config = {
         db: true,
         file: true,
         db_data: {
-            host: 'seanmcgary.com',
+            host: 'localhost',
             port: 27017,
-            db: 'drink_log'
+            db: 'drink_log_dev'
         }
     }
 }
