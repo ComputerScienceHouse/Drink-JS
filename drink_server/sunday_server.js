@@ -12,7 +12,7 @@ function SundayServer(drink_config, logger){
     self.logger = logger;
 
     //sys.puts(self.sunday_time().cyan + ' - Sunday server created');
-    self.logger.log(self.sunday_time().cyan + ' - Sunday server created', 0);
+    self.logger.log_2([{msg:self.sunday_time(), color: 'cyan'}, {msg: ' - Sunday server created', color: null}], 0);
 
     for(var i in drink_config.sunday){
         if(!(i in self)){
@@ -66,7 +66,7 @@ SundayServer.prototype = {
             conn.ldap_handler = new LDAPHandler();
 
             socket.on('connect', function(data){
-                self.logger.log(self.sunday_time(conn).cyan + ' - Client connected from ' + socket.remoteAddress);
+                self.logger.log_2([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - Client connected from ' + socket.remoteAddress, color: null}], 0);
 
                 var machine_name = 'Drink';
                 
@@ -108,7 +108,7 @@ SundayServer.prototype = {
         });
 
         self.server.listen(self.port, self.host);
-        self.logger.log(self.sunday_time().cyan + ' - Sunday server running on ' + self.host + ':' + self.port);
+        self.logger.log_2([{msg: self.sunday_time(), color: 'cyan'}, {msg: ' - Sunday server running on ' + self.host + ':' + self.port, color: null}], 0);
     },
     /**
      * Sets a username to be authenticated
@@ -168,7 +168,7 @@ SundayServer.prototype = {
                 conn.username = result.username;
                 conn.balance = result.balance;
 
-                self.logger.log(self.sunday_time(conn).cyan + ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')');
+                self.logger.log_2([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')', color: null}], 0);
 
                 self.send_msg_code('OK', socket, conn.balance);
 
@@ -203,7 +203,7 @@ SundayServer.prototype = {
                 conn.username = result.username;
                 conn.balance = result.balance;
 
-                self.logger.log(self.sunday_time(conn).cyan + ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')');
+                self.logger.log_2([{msg: self.sunday_time(conn), color: 'cyan'}, {msg: ' - Authenticated ' + conn.ibutton + ' (' + conn.username + ')');
 
                 self.send_msg_code('OK', socket, conn.balance);
             } else {

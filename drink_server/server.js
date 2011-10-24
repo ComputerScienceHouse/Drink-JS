@@ -8,7 +8,7 @@ var logger = require('./logger.js').logger;
 
 var machines = {};
 
-logger.log_2([{msg: util.get_time(), color: 'green'}, {msg: ' - Drink server starting...', color: null}]);
+logger.log_2([{msg: util.get_time(), color: 'green'}, {msg: ' - Drink server starting...', color: null}], 0);
 
 var machine_serv = new machine_server.server(config, sunday_serv, logger);
 machine_serv.init();
