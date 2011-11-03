@@ -36,6 +36,10 @@ exports.mysql = {
 }
 ```
 
+Paths
+---
+Make sure youre NODE_PATH environment variable is set. Also create a variable called DRINK_PATH. This should point to the directory where the drink server is.
+
 Sunday Protocol
 ---
 
