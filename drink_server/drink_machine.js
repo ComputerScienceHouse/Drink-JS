@@ -14,7 +14,7 @@ function DrinkMachine(parameters, logger){
             self[i] = parameters[i];
         }
     }
-
+    
     self.machine_authenticated = false;
     self.request_callback = null;
     self.request_queue = [];
@@ -28,7 +28,9 @@ function DrinkMachine(parameters, logger){
 
     self.logger.log([{msg: self.machine_time(), color: 'cyan'}, {msg:' - ' + self.socket.remoteAddress, color: null}], 0);
 
-    self.check_slot_availability();
+    if(self.machine.has_sensor == true){
+        self.check_slot_availability();
+    }
 
 }
 
