@@ -306,8 +306,10 @@ SundayServer.prototype = {
                                                     drink_db.log_drop(machine_id, conn.username, drop_slot, slot.item_id, parseInt(slot.item_price), 'ok', function(res){
                                                         self.send_msg_code('OK', socket, ' Dropping drink');
 
-                                                        // check the hardware for slot availability
-                                                        self.machine_server.machines[conn.current_machine].machine_inst.check_slot_availability();
+                                                        // check the hardware for slot availability only if the machine has a sensor
+                                                        if(self.machine_server.machines[conn.current_machine].has_sensor == true){
+                                                            self.machine_server.machines[conn.current_machine].machine_inst.check_slot_availability();
+                                                        }
                                                         
                                                     });
                                                 } else {

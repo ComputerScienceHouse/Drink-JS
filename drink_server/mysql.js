@@ -16,6 +16,7 @@ function Drink_DB(){
 
     self.database = 'drink_v2';
     self.client = null;
+    
 
     self.init();
 }
@@ -31,6 +32,11 @@ Drink_DB.prototype = {
         });
 
         self.client.query('USE drink_v2');
+    },
+    close: function(){
+        var self = this;
+
+        self.client.end();
     },
     db_time: function(){
         var self = this;

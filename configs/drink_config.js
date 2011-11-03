@@ -22,19 +22,22 @@ exports.config = {
             machine_id: 'ld',
             long_name: 'Little Drink',
             connected: false,
-            socket: null
+            socket: null,
+            has_sensor: true
         },
         d: {
             machine_id: 'd',
             long_name: 'Big Drink',
             connected: false,
-            socket: null
+            socket: null,
+            has_sensor: true
         },
         s: {
             machine_id: 's',
             long_name: 'Snack',
             connected: false,
-            socket: null
+            socket: null,
+            has_sensor: false
         }
     },
     sunday: {
