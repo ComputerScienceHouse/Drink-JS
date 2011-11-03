@@ -1,0 +1,3 @@
+#!/bin/sh
+
+node $DRINK_PATH/websocket_server/redirect.js

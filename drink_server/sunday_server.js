@@ -288,7 +288,6 @@ SundayServer.prototype = {
                             self.machine_server.machines[conn.current_machine].machine_inst.DROP(drop_slot, drop_delay, function(drop_response){
 
                                 var response = '';
-                                console.log(drop_response);
                                 try {
                                     response = drop_response.substr(0, 1);
                                 }
