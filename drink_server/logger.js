@@ -51,7 +51,10 @@ Logger.prototype = {
                 ldap_handler.auth_ibutton(data.ibutton, function(user_data){
                     if(user_data != false && user_data.drink_admin == 1){
                         socket.join('logger');
-                        socket.emit('auth_drink_admin_res', {status: true});
+                        self.mongodb.logs.find().limit(10).sort({time_logged: -1}).toArray(function(err, post){
+                            socket.emit('auth_drink_admin_res', {status: true, logs: post});
+                        });
+
                     } else {
                         socket.emit('auth_drink_admin_res', {status: false});
                     }
