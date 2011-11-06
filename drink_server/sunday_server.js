@@ -102,7 +102,15 @@ SundayServer.prototype = {
             });
 
             socket.on('close', function(data){
+                console.log("Client socket closed");
+            });
 
+            socket.on('timeout', function(data){
+                console.log("Client socket timedout");
+            });
+
+            socket.on('error', function(data){
+                console.log("Client socket error");
             });
 
         });
