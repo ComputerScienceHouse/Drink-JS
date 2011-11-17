@@ -276,16 +276,20 @@ DrinkMachine.prototype = {
 
                         var slot_num = tini_data[0];
 
-                        if(tini_data[1] == 1 && db_data.available < 1){
-                            // set slot count to 1
-                            drink_db.update_slot_count(machine_id, slot_num, 1, function(results){
-                                //console.log("updated " + slot_num + " to 1");
-                            });
-                        } else if(tini_data[1] == 0 && db_data.available != 0){
-                            // set slot count to 0
-                            drink_db.update_slot_count(machine_id,  slot_num, 0, function(results){
-                                //console.log("updated " + slot_num + " to 0");
-                            });
+                        try {
+                            if(tini_data[1] == 1 && db_data.available < 1){
+                                // set slot count to 1
+                                drink_db.update_slot_count(machine_id, slot_num, 1, function(results){
+                                    //console.log("updated " + slot_num + " to 1");
+                                });
+                            } else if(tini_data[1] == 0 && db_data.available != 0){
+                                // set slot count to 0
+                                drink_db.update_slot_count(machine_id,  slot_num, 0, function(results){
+                                    //console.log("updated " + slot_num + " to 0");
+                                });
+                            }
+                        } catch (e){
+                            self.logger.log_error("WTF SHITZ BREAKING OMG!!!!!!!");
                         }
                     }
                 });
