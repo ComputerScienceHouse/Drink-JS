@@ -69,6 +69,8 @@ DrinkMachine.prototype = {
                         self.request_callback(raw);
                         self.requesting = false;
 
+                        self.request_callback = null;
+
                         //self.process_queue();
                         self.clear_timeout();
 

@@ -294,8 +294,8 @@ SundayServer.prototype = {
                         if(parseInt(conn.balance) >= parseInt(slot.item_price)){
 
                             self.machine_server.machines[conn.current_machine].machine_inst.DROP(drop_slot, drop_delay, function(drop_response){
-
                                 var response = '';
+
                                 try {
                                     response = drop_response.substr(0, 1);
                                 }
@@ -303,7 +303,8 @@ SundayServer.prototype = {
                                     util.print_error(e, 'sunday - parsing drop response');
                                 }
 
-                                if(response == 4){
+                                //console.log("Response:" + response + "END");
+                                if(response == '4'){
                                     // drop successful, deduct credits
                                     conn.ldap_handler.update_balance(conn.username, new_balance, function(msgid, err){
                                         if(err == null){
@@ -488,6 +489,7 @@ SundayServer.prototype = {
         if(typeof message != 'undefined'){
             error_msg += message;
         }
+
         try {
             socket.write(error_msg + "\r\n");
         } catch (e){

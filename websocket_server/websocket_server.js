@@ -8,8 +8,15 @@
 var io = require('socket.io');
 var express = require('express');
 var net = require('net');
+var fs = require('fs');
 
-var app = express.createServer();
+var ssl = {
+  key: fs.readFileSync('/etc/ssl/drink/key.pem'),
+  cert: fs.readFileSync('/etc/ssl/drink/cert.pem'),
+  ca: fs.readFileSync('/etc/ssl/certs/CA-Certificate.crt')
+};
+
+var app = express.createServer(ssl);
 
 io = io.listen(app);
 
