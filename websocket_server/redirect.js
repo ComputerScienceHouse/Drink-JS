@@ -6,11 +6,24 @@
  * To change this template use File | Settings | File Templates.
  */
 var express = require('express');
+var fs = require('fs');
 
+// create the standard non-ssl connection
 var app = express.createServer();
 
 app.get('/', function(req, res){
     res.redirect('https://members.csh.rit.edu/drink');
 });
 
+// create the SSL enabled connection
+/*var app_ssl = express.createServer({
+    key: fs.readFileSync('/etc/ssl/drinkjs_ssl/key.pem').toString(),
+    cert: fs.readFileSync('/etc/ssl/drinkjs_ssl/key.pem').toString()
+});
+
+app_ssl.get('/', function(req, res){
+    res.redirect('https://members.csh.rit.edu/drink');
+});*/
+
 app.listen(80);
+//app_ssl.listen(443);

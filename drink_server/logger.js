@@ -62,8 +62,6 @@ Logger.prototype = {
             })
         });
 
-
-
         app.listen(8081);
 
         self.websocket_running = true;
