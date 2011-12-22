@@ -55,6 +55,17 @@ exports.config = {
             ca: fs.readFileSync('/etc/ssl/certs/CA-Certificate.crt')
         }
     },
+    sunday_opcodes: [
+        'UPTIME',
+        'WHOAMI',
+        'GETBALANCE',
+        'QUIT',
+        'MACHINE',
+        'DROP',
+        'USER',
+        'PASS',
+        'IBUTTON'
+    ],
     error_codes: require('./drink_response_codes.js').codes,
     machine_codes: {
         "ld": "Little Drink",
