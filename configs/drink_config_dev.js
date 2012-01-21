@@ -70,7 +70,8 @@ exports.config = {
         'DROP',
         'USER',
         'PASS',
-        'IBUTTON'
+        'IBUTTON',
+        'STAT'
     ],
     error_codes: require('./drink_response_codes.js').codes,
     machine_codes: {
