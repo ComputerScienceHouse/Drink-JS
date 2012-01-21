@@ -1,0 +1,23 @@
+#!/bin/sh
+npm install --global mongodb --mongodb:native
+
+# https://github.com/idottv/node-mongodb-wrapper
+npm install --global mongodb-wrapper
+
+# https://github.com/Marak/colors.js
+npm install --global colors
+
+# https://github.com/felixge/node-mysql
+npm install --global mysql
+
+# https://github.com/visionmedia/express
+npm install --global express
+
+# https://github.com/LearnBoost/socket.io
+npm install --global socket.io
+
+# https://github.com/LearnBoost/socket.io-client
+npm install --global socket.io-client
+
+
+
