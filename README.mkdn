@@ -1,0 +1,218 @@
+CSH Drink Server
+===
+
+Deps
+---
+- Node.js (>= v0.4.11)
+    - node-LDAP (https://github.com/jeremycx/node-LDAP.git)
+    - colors (https://github.com/Marak/colors.js)
+    - mysql (https://github.com/felixge/node-mysql)
+	- express (https://github.com/visionmedia/express)
+	- Socket.io (https://github.com/LearnBoost/socket.io)
+	- Socket.io-client (https://github.com/LearnBoost/socket.io-client)
+
+Configs
+---
+There are two configs that need to be added to the configs directory that will contain the credentials for mysql and ldap
+
+###configs/ldap_config.js
+
+```
+exports.ldap = {
+    username: "",
+    password: "",
+    host: "ldap://ldap.csh.rit.edu",
+    version: 3
+}
+```
+
+###configs/mysql_config.js
+
+```
+exports.mysql = {
+    user: '',
+    password: '',
+    host: ''
+}
+```
+
+Paths
+---
+Make sure youre NODE_PATH environment variable is set. Also create a variable called DRINK_PATH. This should point to the directory where the drink server is.
+
+Sunday Protocol
+---
+
+###USER
+
+Command:
+
+```
+USER <username>\n
+```
+
+Response:
+
+```
+OK:\n
+```
+
+Requires: nothing
+
+###PASS
+
+Command:
+
+```
+PASS <password>\n
+```
+
+Response:
+
+- Success:
+
+```
+OK: <num credits(int)>\n
+```
+
+- Failure:
+
+```
+ERR 407 Invalid password.\n
+```
+
+Requires: User must first issue the USER command
+
+###IBUTTON
+
+Command:
+
+```
+IBUTTON <ibutton>\n
+```
+
+Response:
+
+- Success: 
+
+```
+OK: <num credits(int)>\n
+```
+
+- Failure: 
+
+```
+ERR 207 Invalid Ibutton\n
+```
+
+Requires: nothing
+
+###MACHINE
+
+Command:
+
+```
+MACHINE <machine alias>\n
+```
+
+- Machine aliases:
+    - ld
+    - d
+    - s
+
+Response:
+
+- Success: 
+
+```
+OK: Welcome to <machine name(string)>\n
+```
+
+- Failure: 
+
+```
+ERR 414 Invalid machine name - USAGE: MACHINE < d | ld | s >\n
+```
+
+Requires: nothing
+
+###STAT
+
+Returns a new-line seperated string of slots for a selected machine.
+
+Command:
+
+```
+STAT\n
+```
+
+Response:
+
+- Success:
+
+```
+<slot num(int)> <slot name(string)> <slot price(int)> <num available(int)> <slot status(bool)>\n
+...
+OK <total slots(int)> Slots retrieved\n
+```
+
+- Failure:
+
+```
+ERR 416 Machine is offline or unreachable\n
+```
+
+Requires: A machine needs to be selected and said machine must be online.
+
+###GETBALANCE
+
+Returns the number of credits a user has.
+
+Command:
+
+```
+GETBALANCE\n
+```
+
+Response:
+
+- Success:
+
+```
+OK: <num credits(int)>\n
+```
+
+- Failure:
+
+```
+ERR 204 You need to login.\n
+```
+
+Requires: A valid, authenticated user
+
+### DROP
+
+Drop a drink from the current machine with a delay.
+
+Command:
+
+```
+DROP <slot num(int)> [delay (int)]\n
+```
+
+
+Response:
+
+- Success:
+
+```
+OK: Dropping drink\n
+```
+
+- Failure:
+
+```
+ERR 103 Unknown Failure.
+
+ERR 150 Unable to initialize hardware for drop.
+```

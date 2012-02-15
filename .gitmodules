@@ -1,3 +1,6 @@
 [submodule "node-LDAP"]
 	path = node-LDAP
 	url = https://github.com/jeremycx/node-LDAP.git
+[submodule "docs/wiki"]
+	path = docs/wiki
+	url = git@github.com:ComputerScienceHouse/Drink-JS.wiki.git

@@ -28,6 +28,8 @@ io.sockets.on('connection', function(socket){
     var request_queue = [];
     var requesting = false;
     var request_callback = null;
+
+    var request_num = 0;
     
     // connect to the sunday server
     conn.drink_conn = new net.Socket();
@@ -42,12 +44,14 @@ io.sockets.on('connection', function(socket){
     conn.drink_conn.on('data', function(data){
         var data = data.toString();
 
-        if(request_callback != null){
+        if(request_callback != null && request_num > 0){
             request_callback(data);
             requesting = false;
 
             process_queue();
         }
+
+        request_num++;
 
     });
 
@@ -74,6 +78,8 @@ io.sockets.on('connection', function(socket){
         var ibutton = data.ibutton;
 
         var callback = function(drink_data){
+            //console.log('sending');
+            console.log(drink_data.substr(0,1));
             socket.emit('ibutton_recv', drink_data);
         }
 
@@ -95,6 +101,20 @@ io.sockets.on('connection', function(socket){
         var command = function(){
             console.log("Machine id = " + data.machine_id);
             conn.drink_conn.write("MACHINE " + data.machine_id + "\n");
+        }
+
+        command_prep(callback, command);
+    });
+
+    socket.on('getbalance', function(data){
+        console.log("GETBALANCE");
+        console.log(data);
+        var callback = function(recv_data){
+            socket.emit('balance_recv', recv_data);
+        }
+
+        var command = function(){
+            conn.drink_conn.write("GETBALANCE\n");
         }
 
         command_prep(callback, command);
@@ -125,11 +145,7 @@ io.sockets.on('connection', function(socket){
         }
 
         command_prep(callback, command);
-
-
     });
-
-
 
 });
 
