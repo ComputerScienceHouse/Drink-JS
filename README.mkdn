@@ -235,7 +235,16 @@ Response:
 - Success:
 
 ```
-{"machines":[{"machine_name":"Little Drink","connected":true},{"machine_name":"Big Drink","connected":false},{"machine_name":"Snack","connected":true}],"opcode":"OK"}
+{
+    "machines":[
+        {
+            "machine_name":"<machine name>",
+            "connected": <true | false>
+        }...{}
+
+    ],
+    "opcode":"OK"
+}
 ```
 
 - Failure:
