@@ -3,13 +3,15 @@ CSH Drink Server
 
 Deps
 ---
-- Node.js (>= v0.4.11)
+- Node.js (>= v0.6.10)
     - node-LDAP (https://github.com/jeremycx/node-LDAP.git)
     - colors (https://github.com/Marak/colors.js)
     - mysql (https://github.com/felixge/node-mysql)
 	- express (https://github.com/visionmedia/express)
 	- Socket.io (https://github.com/LearnBoost/socket.io)
 	- Socket.io-client (https://github.com/LearnBoost/socket.io-client)
+	- Mongodb Native (https://github.com/christkv/node-mongodb-native.git)
+	- Mongodb Wrapper (https://github.com/idottv/node-mongodb-wrapper)
 
 Configs
 ---
@@ -215,4 +217,29 @@ OK: Dropping drink\n
 ERR 103 Unknown Failure.
 
 ERR 150 Unable to initialize hardware for drop.
+```
+
+### SERVERSTAT
+
+Get the status of the drink machines
+
+Command:
+
+```
+SERVERSTAT\n
+```
+
+
+Response:
+
+- Success:
+
+```
+{"machines":[{"machine_name":"Little Drink","connected":true},{"machine_name":"Big Drink","connected":false},{"machine_name":"Snack","connected":true}],"opcode":"OK"}
+```
+
+- Failure:
+
+```
+
 ```
