@@ -17,6 +17,8 @@ exports.codes = {
     "205": 'ERR 205 Maximum user count reached.',
     "206": 'ERR 206 Invalid number of args',
     "207": 'ERR 207 Invalid Ibutton',
+    "208": 'ERR 208 Transfer error - user doesnt exist',
+    "209": 'ERR 209 Error during credit transfer',
     "400": 'ERR 400 Invalid admin flag.',
     "401": 'ERR 401 Invalid cost.',
     "402": 'ERR 402 Invalid credits.',
