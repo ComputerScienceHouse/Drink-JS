@@ -9,6 +9,7 @@ exports.codes = {
     "105": 'ERR 105 Slot not found',
     "150": 'ERR 150 Unable to initialize hardware for drop.',
     "151": 'ERR 151 Unable to communicate with hardware. Contact an admin.',
+    "152": 'WARN 152 Drop in progress, please wait before dropping again',
     "200": 'ERR 200 Access denied.',
     "201": 'ERR 201 USER command needs to be issued first.',
     "202": 'ERR 202 Invalid username or password.',
