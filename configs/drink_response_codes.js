@@ -15,6 +15,7 @@ exports.codes = {
     "207": 'ERR 207 Invalid Ibutton',
     "208": 'ERR 208 Transfer error - user doesnt exist',
     "209": 'ERR 209 Error during credit transfer',
+    "210": 'ERR 210 Send amount must be a positive, whole number',
     "403": 'ERR 403 Invalid delay',
     "407": 'ERR 407 Invalid password.',
     "409": 'ERR 409 Invalid slot.',
