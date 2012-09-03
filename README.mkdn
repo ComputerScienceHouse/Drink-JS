@@ -61,9 +61,9 @@ Everything is now deployable via Capistrano, so you're gonna need that.
 $ rvm all do gem install capistrano capistrano-ext
 ```
 
-DRINK ADMINS: To manage the production drink server with capistrano, you will need to add your ssh keys to the drink user.
+**DRINK ADMINS**: To manage the production drink server with capistrano, you will need to add your ssh keys to the drink user.
 
-OTHER PEOPLE: You can use capistrano to deploy to your own test server (downloadable drink test VM coming soon!!)
+**OTHER PEOPLE**: You can use capistrano to deploy to your own test server (downloadable drink test VM coming soon!!)
 
 ### Clone drink
 
@@ -75,9 +75,9 @@ $ git clone https://github.com/ComputerScienceHouse/Drink-JS.git && cd Drink-JS
 
 ### Setup the environment
 
-DRINK ADMINS: The configs for ldap and mysql are already on the drink server in ~/configs. Capistrano is awesome and will drop them into the correct place on deploy.
+**DRINK ADMINS**: The configs for ldap and mysql are already on the drink server in ~/configs. Capistrano is awesome and will drop them into the correct place on deploy.
 
-OTHER PEOPLE: You'll need to create your own copies of the configs. Create these two below and put them in ~/configs of your dev environment.
+**OTHER PEOPLE**: You'll need to create your own copies of the configs. Create these two below and put them in ~/configs of your dev environment.
 
 
 #### config/ldap_config.js
@@ -106,17 +106,17 @@ Now we're ready to starty deploying!
 
 First run deploy:setup for your given environment. This will create directories and install the forever node module which will be used to run the drink server.
 
-```
+``` bash
 $ cap [develop|production] deploy:setup
 ```
 
 Now pick something to deploy
-```
+``` bash
 $ cap [-S branch=<branchname>] [develop|production] deploy
 ```
 
 Oh, you can start and stop shit too.
-```
+``` bash
 $ cap [-S branch=<branchname>] [develop|production] [dev|prod]:start
 
 $ cap [-S branch=<branchname>] [develop|production] [dev|prod]:stop
@@ -129,12 +129,10 @@ To view all of the tasks in capistrano, run ```cap -T``
 
 The state in which drink runs (production or dev) depends on the ```$DRINK_ENV``` environment variable.
 
-```
-// dev
-export DRINK_ENV=dev
+```bash
+$ export DRINK_ENV=dev
 
-// prod
-export DRINK_ENV=prod
+$ export DRINK_ENV=prod
 ```
 
 ## Sunday Protocol
