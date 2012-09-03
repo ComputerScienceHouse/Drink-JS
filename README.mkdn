@@ -1,20 +1,33 @@
 CSH Drink Server
 ===
 
-Deps
----
-- Node.js (>= v0.6.10)
-    - node-LDAP (https://github.com/jeremycx/node-LDAP.git)
-    - colors (https://github.com/Marak/colors.js)
-    - mysql (https://github.com/felixge/node-mysql)
-	- express (https://github.com/visionmedia/express)
-	- Socket.io (https://github.com/LearnBoost/socket.io)
-	- Socket.io-client (https://github.com/LearnBoost/socket.io-client)
-	- Mongodb Native (https://github.com/christkv/node-mongodb-native.git)
-	- Mongodb Wrapper (https://github.com/idottv/node-mongodb-wrapper)
+## Setup
 
-Configs
----
+Everything is now deployable via Capistrano, so you're gonna need that.
+
+## Deploy with capistrano
+
+Setup the environment
+
+```
+cap [develop|production] deploy:setup
+```
+
+Now pick something to deploy
+```
+cap [-S branch=<branchname>] [develop|production] deploy
+```
+
+Oh, you can start and stop shit too
+```
+cap [-S branch=<branchname>] [develop|production] [dev|prod]:start
+
+cap [-S branch=<branchname>] [develop|production] [dev|prod]:stop
+```
+
+
+## Configs
+
 There are two configs that need to be added to the configs directory that will contain the credentials for mysql and ldap
 
 ###config/ldap_config.js
@@ -38,12 +51,12 @@ exports.mysql = {
 }
 ```
 
-Paths
----
+## Paths
+
 Make sure youre NODE_PATH environment variable is set. Also create a variable called DRINK_PATH. This should point to the directory where the drink server is.
 
-Sunday Protocol
----
+## Sunday Protocol
+
 
 ###USER
 
