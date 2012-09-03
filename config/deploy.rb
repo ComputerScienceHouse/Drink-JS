@@ -17,8 +17,8 @@ set :branch, fetch(:branch, "master")
 set :use_sudo, false
 set :user, "drink"
 
-set :stages, ["production"]
-set :default_stage, "production"
+set :stages, ["dev", "production"]
+set :default_stage, "dev"
 
 set :node_path, "/usr/bin/node"
 
@@ -31,6 +31,45 @@ namespace :deploy do
 end
 
 after "deploy:setup", "deploy:postSetup"
+
+
+namespace :develop do
+	task :deps, :roles => [:app] do
+		desc "== running npm on #{latest_release} =="
+		run "cd ~/drink_dev/current && rm -rf node_modules && npm install"
+	end
+
+	task :configs, :roles => [:app] do
+		run "cp ~/configs/mysql_config.js ~/configs/ldap_config.js ~/drink_dev/current/config"
+	end
+
+	task :stop, :roles => [:app] do
+		desc "======= Stopping drink dev site ======="
+		run "forever stop server.js"
+		run "forever stop websocket_server.js"
+		run "forever stop redirect.js"
+	end
+
+	task :start, :roles => [:app] do
+		desc "======= Starting splash site ======="
+		run "export DRINK_ENV=dev; cd ~/drink_dev/current/lib && forever start server.js"
+		run "cd ~/drink_dev/current/websocket_server && forever start websocket_server.js"
+		run "cd ~/drink_dev/current/websocket_server && sudo forever start redirect.js"
+	end
+end
+
+=begin
+namespace :prod do
+
+end
+=end
+
+namespace :deploy do
+	task :postSetup, :roles => [:app] do
+		desc "========================================================\nInstalling forever\n========================================================"
+		run "sudo npm install --global forever"
+	end
+end
 
 =begin
 namespace :photoGallery do
