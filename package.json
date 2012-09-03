@@ -15,14 +15,16 @@
   },
   "dependencies" : {
 	"colors": "*",
+	"mongodb": "*",
 	"mongodb-wrapper": "*",
 	"mysql": "*",
 	"express":"*",
-	"socket.io": "*"
+	"socket.io": "*",
+	"LDAP": "*"
   },
   "license": "MIT",
   "engines": {
-    "node": ">=0.7"
+    "node": ">=0.8.0"
   }
 }
 
