@@ -66,7 +66,7 @@ end
 
 namespace :deploy do
 	task :postSetup, :roles => [:app] do
-		desc "========================================================\nInstalling forever\n========================================================"
+		desc "Installing forever"
 		run "sudo npm install --global forever"
 	end
 end

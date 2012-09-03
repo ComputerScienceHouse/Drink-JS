@@ -5,8 +5,10 @@
  * Time: 3:15 AM
  * To change this template use File | Settings | File Templates.
  */
-var express = require('express');
-var fs = require('fs');
+var express = require('express'),
+	fs = require('fs'),
+	utils = require('../lib/utils').utils,
+	config = utils.get_config();
 
 // create the standard non-ssl connection
 var app = express.createServer();
@@ -15,12 +17,12 @@ app.get('/', function(req, res){
     res.redirect('https://members.csh.rit.edu/drink');
 });
 
+console.log(config);
+
 // create the SSL enabled connection
-var app_ssl = express.createServer({
-    key: fs.readFileSync('/etc/ssl/drink/key.pem'),
-    cert: fs.readFileSync('/etc/ssl/drink/cert.pem'),
-    ca: fs.readFileSync('/etc/ssl/certs/CA-Certificate.crt')
-});
+var app_ssl = express.createServer(config.sunday_ssl);
+
+
 
 app_ssl.get('/', function(req, res){
     res.redirect('https://members.csh.rit.edu/drink');
