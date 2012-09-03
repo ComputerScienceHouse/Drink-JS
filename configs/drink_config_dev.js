@@ -56,11 +56,12 @@ exports.config = {
         host: '0.0.0.0',
         port: 4243,
         ssl: {
-            key: fs.readFileSync('/etc/ssl/drink/key.pem'),
-            cert: fs.readFileSync('/etc/ssl/drink/cert.pem'),
-            ca: fs.readFileSync('/etc/ssl/certs/CA-Certificate.crt')
+            key: fs.readFileSync('../drink_certs/key.pem'),
+            cert: fs.readFileSync('../drink_certs/cert.pem'),
+            ca: fs.readFileSync('../drink_certs/CA-Certificate.crt')
         }
     },
+
     sunday_opcodes: [
         'UPTIME',
         'WHOAMI',
