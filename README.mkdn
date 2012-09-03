@@ -17,7 +17,7 @@ Configs
 ---
 There are two configs that need to be added to the configs directory that will contain the credentials for mysql and ldap
 
-###configs/ldap_config.js
+###config/ldap_config.js
 
 ```
 exports.ldap = {
@@ -28,7 +28,7 @@ exports.ldap = {
 }
 ```
 
-###configs/mysql_config.js
+###config/mysql_config.js
 
 ```
 exports.mysql = {
