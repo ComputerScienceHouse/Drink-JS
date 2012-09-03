@@ -1,7 +1,57 @@
 CSH Drink Server
 ===
 
-## Setup
+## Dependencies
+
+- NodeJS >= v0.8.0 
+- MySQl
+- MongoDB
+
+## Installation
+Install libraries (this assumes Ubunut/debian)
+
+```
+aptitude install make gcc g++ libldap-2.4-2 libldap2-dev uuid-dev openssl libssl-dev git git-core
+```
+
+Mongodb can be installed via 10gen's repository, so add their key and repository to ```/etc/apt/sources.list```
+
+```
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+
+echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" >> /etc/apt/sources.list
+
+aptitude update
+
+```
+
+There are a few different versions to choose from:
+
+- mongodb-10gen - latest stable
+- mongodb18-10gen - stable 1.8 release
+- mongodb20-10gen - stable 2.0 release
+
+Lets go with the latest stable release
+
+```
+aptitude install mongodb-10gen
+
+```
+
+Install Nodejs. I personally like to build it from source since it makes staying on the bleeding edge really easy.
+
+```
+cd ~/
+
+git clone https://github.com/joyent/node nodejs && cd nodejs
+
+// checkout the latest stable release
+git checkout v0.8.8
+
+./configure && make && sudo make install
+```
+
+## Deploy with capistrano
 
 Everything is now deployable via Capistrano, so you're gonna need that.
 
@@ -11,32 +61,26 @@ Everything is now deployable via Capistrano, so you're gonna need that.
 rvm all do gem install capistrano capistrano-ext
 ```
 
-## Deploy with capistrano
+DRINK ADMINS: To manage the production drink server with capistrano, you will need to add your ssh keys to the drink user.
 
-Setup the environment
+OTHER PEOPLE: You can use capistrano to deploy to your own test server (downloadable drink test VM coming soon!!)
+
+### Clone drink
+
+You mean you havent done that already?
 
 ```
-cap [develop|production] deploy:setup
+git clone https://github.com/ComputerScienceHouse/Drink-JS.git && cd Drink-JS
 ```
 
-Now pick something to deploy
-```
-cap [-S branch=<branchname>] [develop|production] deploy
-```
+### Setup the environment
 
-Oh, you can start and stop shit too
-```
-cap [-S branch=<branchname>] [develop|production] [dev|prod]:start
+DRINK ADMINS: The configs for ldap and mysql are already on the drink server in ~/configs. Capistrano is awesome and will drop them into the correct place on deploy.
 
-cap [-S branch=<branchname>] [develop|production] [dev|prod]:stop
-```
+OTHER PEOPLE: You'll need to create your own copies of the configs. Create these two below and put them in ~/configs of your dev environment.
 
 
-## Configs
-
-There are two configs that need to be added to the configs directory that will contain the credentials for mysql and ldap
-
-###config/ldap_config.js
+#### config/ldap_config.js
 
 ```
 exports.ldap = {
@@ -47,7 +91,7 @@ exports.ldap = {
 }
 ```
 
-###config/mysql_config.js
+#### config/mysql_config.js
 
 ```
 exports.mysql = {
@@ -57,9 +101,41 @@ exports.mysql = {
 }
 ```
 
-## Paths
+Now we're ready to starty deploying!
 
-Make sure youre NODE_PATH environment variable is set. Also create a variable called DRINK_PATH. This should point to the directory where the drink server is.
+
+First run deploy:setup for your given environment. This will create directories and install the forever node module which will be used to run the drink server.
+
+```
+cap [develop|production] deploy:setup
+```
+
+Now pick something to deploy
+```
+cap [-S branch=<branchname>] [develop|production] deploy
+```
+
+Oh, you can start and stop shit too.
+```
+cap [-S branch=<branchname>] [develop|production] [dev|prod]:start
+
+cap [-S branch=<branchname>] [develop|production] [dev|prod]:stop
+```
+
+To view all of the tasks in capistrano, run ```cap -T``
+
+
+### Drink environment variable
+
+The state in which drink runs (production or dev) depends on the ```$DRINK_ENV``` environment variable.
+
+```
+// dev
+export DRINK_ENV=dev
+
+// prod
+export DRINK_ENV=prod
+```
 
 ## Sunday Protocol
 
