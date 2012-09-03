@@ -5,6 +5,12 @@ CSH Drink Server
 
 Everything is now deployable via Capistrano, so you're gonna need that.
 
+(if you dont have RVM you're a failure)
+
+```
+rvm all do gem install capistrano capistrano-ext
+```
+
 ## Deploy with capistrano
 
 Setup the environment
