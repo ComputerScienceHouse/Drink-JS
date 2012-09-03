@@ -17,8 +17,6 @@ app.get('/', function(req, res){
     res.redirect('https://members.csh.rit.edu/drink');
 });
 
-console.log(config);
-
 // create the SSL enabled connection
 var app_ssl = express.createServer(config.sunday_ssl);
 
