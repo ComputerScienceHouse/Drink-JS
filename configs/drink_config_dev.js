@@ -1,7 +1,8 @@
 /**
  * Config file for development purposes
  */
-var fs = require('fs');
+var fs = require('fs'),
+	path = require('path');
 
 exports.config = {
     machine_server: {
@@ -56,9 +57,9 @@ exports.config = {
         host: '0.0.0.0',
         port: 4243,
         ssl: {
-            key: fs.readFileSync('../drink_certs/key.pem'),
-            cert: fs.readFileSync('../drink_certs/cert.pem'),
-            ca: fs.readFileSync('../drink_certs/CA-Certificate.crt')
+            key: fs.readFileSync(path.normalize('../drink_certs/key.pem')),
+            cert: fs.readFileSync(path.normalize('../drink_certs/cert.pem')),
+            ca: fs.readFileSync(path.normalize('../drink_certs/CA-Certificate.crt'))
         }
     },
 

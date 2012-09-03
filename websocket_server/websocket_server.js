@@ -5,21 +5,20 @@
  * Time: 1:27 AM
  * To change this template use File | Settings | File Templates.
  */
-var io = require('socket.io');
-var express = require('express');
-var net = require('net');
-var fs = require('fs');
-var tls = require('tls');
+var io = require('socket.io'),
+	express = require('express'),
+	net = require('net'),
+	fs = require('fs'),
+	tls = require('tls'),
+	utils = require('../lib/utils.js').utils,
+	config = utils.get_config(),
+	https = require('https');
 
-var ssl = {
-  key: fs.readFileSync('/etc/ssl/drink/key.pem'),
-  cert: fs.readFileSync('/etc/ssl/drink/cert.pem'),
-  ca: fs.readFileSync('/etc/ssl/certs/CA-Certificate.crt')
-};
+var ssl = config.sunday_ssl,
+	app = express(ssl),
+	https_server = https.createServer(ssl, app);
 
-var app = express.createServer(ssl);
-
-io = io.listen(app);
+io = io.listen(https_server);
 
 io.sockets.on('connection', function(socket){
 
@@ -149,4 +148,4 @@ io.sockets.on('connection', function(socket){
 
 });
 
-app.listen(8080);
+https_server.listen(8080);
