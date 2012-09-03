@@ -1,3 +1,5 @@
 configs/mysql_config.js
 configs/ldap_config.js
 node_modules
+drink_certs
+*.sw*
