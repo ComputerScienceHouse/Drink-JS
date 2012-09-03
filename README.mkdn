@@ -10,18 +10,19 @@ CSH Drink Server
 ## Installation
 Install libraries (this assumes Ubuntu/debian)
 
-```
-aptitude install make gcc g++ libldap-2.4-2 libldap2-dev uuid-dev openssl libssl-dev git git-core
+``` bash
+$ aptitude install make gcc g++ libldap-2.4-2 libldap2-dev uuid-dev openssl libssl-dev git git-core
 ```
 
 Mongodb can be installed via 10gen's repository, so add their key and repository to ```/etc/apt/sources.list```
 
-```
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
-echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" >> /etc/apt/sources.list
+``` bash
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
-aptitude update
+$ echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" >> /etc/apt/sources.list
+
+$ aptitude update
 
 ```
 
@@ -33,22 +34,21 @@ There are a few different versions to choose from:
 
 Lets go with the latest stable release
 
-```
-aptitude install mongodb-10gen
-
+``` bash
+$ aptitude install mongodb-10gen
 ```
 
 Install Nodejs. I personally like to build it from source since it makes staying on the bleeding edge really easy.
 
-```
-cd ~/
 
-git clone https://github.com/joyent/node nodejs && cd nodejs
+``` bash
+$ cd ~/
 
-// checkout the latest stable release
-git checkout v0.8.8
+$ git clone https://github.com/joyent/node nodejs && cd nodejs
 
-./configure && make && sudo make install
+$ git checkout v0.8.8
+
+$ ./configure && make && sudo make install
 ```
 
 ## Deploy with capistrano
@@ -57,8 +57,8 @@ Everything is now deployable via Capistrano, so you're gonna need that.
 
 (if you dont have RVM you're a failure)
 
-```
-rvm all do gem install capistrano capistrano-ext
+``` bash
+$ rvm all do gem install capistrano capistrano-ext
 ```
 
 DRINK ADMINS: To manage the production drink server with capistrano, you will need to add your ssh keys to the drink user.
@@ -69,8 +69,8 @@ OTHER PEOPLE: You can use capistrano to deploy to your own test server (download
 
 You mean you havent done that already?
 
-```
-git clone https://github.com/ComputerScienceHouse/Drink-JS.git && cd Drink-JS
+``` bash
+$ git clone https://github.com/ComputerScienceHouse/Drink-JS.git && cd Drink-JS
 ```
 
 ### Setup the environment
@@ -107,19 +107,19 @@ Now we're ready to starty deploying!
 First run deploy:setup for your given environment. This will create directories and install the forever node module which will be used to run the drink server.
 
 ```
-cap [develop|production] deploy:setup
+$ cap [develop|production] deploy:setup
 ```
 
 Now pick something to deploy
 ```
-cap [-S branch=<branchname>] [develop|production] deploy
+$ cap [-S branch=<branchname>] [develop|production] deploy
 ```
 
 Oh, you can start and stop shit too.
 ```
-cap [-S branch=<branchname>] [develop|production] [dev|prod]:start
+$ cap [-S branch=<branchname>] [develop|production] [dev|prod]:start
 
-cap [-S branch=<branchname>] [develop|production] [dev|prod]:stop
+$ cap [-S branch=<branchname>] [develop|production] [dev|prod]:stop
 ```
 
 To view all of the tasks in capistrano, run ```cap -T``
