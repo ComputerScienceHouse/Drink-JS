@@ -1,0 +1,30 @@
+{
+  "name": "Drink-JS",
+  "version": "0.0.3",
+  "author": "Sean McGary <sean.mcgary@gmail.com>",
+  "description": "CSH Drink Server",
+  "contributors": [ 
+    {
+      "name": "Sean McGary",
+      "email": "sean.mcgary@gmail.com"
+    } 
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ComputerScienceHouse/Drink-JS.git"
+  },
+  "dependencies" : {
+	"colors": "*",
+	"mongodb": "*",
+	"mongodb-wrapper": "*",
+	"mysql": "*",
+	"express":"*",
+	"socket.io": "*",
+	"LDAP": "*"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.8.0"
+  }
+}
+

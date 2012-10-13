@@ -1,51 +1,44 @@
-/**
- * Config file for development purposes
- */
 var fs = require('fs');
 
+/**
+ * Production configuration file
+ */
 exports.config = {
     machine_server: {
         host: '0.0.0.0',
         port: 4343
     },
     tini_ips: {
-        '127.0.0.1': 'd',
-        '127.0.1.1': 'd',
-        '129.21.50.201': 's',
-        '129.21.60.128': 'd',
-        '129.21.63.50': 'ld',
-        '129.21.62.51': 's',
-        '129.21.61.98': 's',
-        '129.21.66.135': 'ld'
+        '129.21.50.36': 's',
+        '129.21.49.185': 'ld',
+        '129.21.50.18': 'd'
     },
     machine_ip_mapping: {
-        '127.0.0.1': 'd',
-        '127.0.1.1': 'd',
-        '129.21.50.201': 's',
-        '129.21.60.128': 'd',
-        '129.21.63.50': 'ld',
-        '129.21.62.51': 's',
-        '129.21.61.98': 's',
-        '129.21.66.135': 'ld'
+        '129.21.49.106': 'd',
+        '129.21.49.105': 'ld',
+        '129.21.49.107': 's'
     },
     machines: {
         ld: {
             machine_id: 'ld',
             long_name: 'Little Drink',
             connected: false,
-            socket: null
+            socket: null,
+            has_sensor: true
         },
         d: {
             machine_id: 'd',
             long_name: 'Big Drink',
             connected: false,
-            socket: null
+            socket: null,
+            has_sensor: true
         },
         s: {
             machine_id: 's',
             long_name: 'Snack',
             connected: false,
-            socket: null
+            socket: null,
+            has_sensor: false
         }
     },
     sunday: {
@@ -88,7 +81,7 @@ exports.config = {
         db_data: {
             host: 'localhost',
             port: 27017,
-            db: 'drink_log_dev'
+            db: 'drink_log'
         }
     }
 }

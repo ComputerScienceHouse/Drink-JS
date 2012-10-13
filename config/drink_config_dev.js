@@ -1,45 +1,52 @@
-var fs = require('fs');
-
 /**
- * Production configuration file
+ * Config file for development purposes
  */
+var fs = require('fs'),
+	path = require('path');
+
 exports.config = {
     machine_server: {
         host: '0.0.0.0',
         port: 4343
     },
     tini_ips: {
-        '129.21.50.36': 's',
-        '129.21.50.19': 'ld',
-        '129.21.50.18': 'd'
+        '127.0.0.1': 'd',
+        '127.0.1.1': 'd',
+        '129.21.50.201': 's',
+        '129.21.60.128': 'd',
+        '129.21.63.50': 'ld',
+        '129.21.62.51': 's',
+        '129.21.61.98': 's',
+        '129.21.66.135': 'ld'
     },
     machine_ip_mapping: {
-        '129.21.49.106': 'd',
-        '129.21.49.105': 'ld',
-        '129.21.49.107': 's'
-
+        '127.0.0.1': 'd',
+        '127.0.1.1': 'd',
+        '129.21.50.201': 's',
+        '129.21.60.128': 'd',
+        '129.21.63.50': 'ld',
+        '129.21.62.51': 's',
+        '129.21.61.98': 's',
+        '129.21.66.135': 'ld'
     },
     machines: {
         ld: {
             machine_id: 'ld',
             long_name: 'Little Drink',
             connected: false,
-            socket: null,
-            has_sensor: true
+            socket: null
         },
         d: {
             machine_id: 'd',
             long_name: 'Big Drink',
             connected: false,
-            socket: null,
-            has_sensor: true
+            socket: null
         },
         s: {
             machine_id: 's',
             long_name: 'Snack',
             connected: false,
-            socket: null,
-            has_sensor: false
+            socket: null
         }
     },
     sunday: {
@@ -50,11 +57,12 @@ exports.config = {
         host: '0.0.0.0',
         port: 4243,
         ssl: {
-            key: fs.readFileSync('/etc/ssl/drink/key.pem'),
-            cert: fs.readFileSync('/etc/ssl/drink/cert.pem'),
-            ca: fs.readFileSync('/etc/ssl/certs/CA-Certificate.crt')
+            key: fs.readFileSync(path.normalize(process.env.HOME + '/drink_certs/key.pem')),
+            cert: fs.readFileSync(path.normalize(process.env.HOME + '/drink_certs/cert.pem')),
+            ca: fs.readFileSync(path.normalize(process.env.HOME + '/drink_certs/CA-Certificate.crt'))
         }
     },
+
     sunday_opcodes: [
         'UPTIME',
         'WHOAMI',
@@ -82,7 +90,7 @@ exports.config = {
         db_data: {
             host: 'localhost',
             port: 27017,
-            db: 'drink_log'
+            db: 'drink_log_dev'
         }
     }
 }
