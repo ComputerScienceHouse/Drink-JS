@@ -36,11 +36,11 @@ after "deploy:setup", "deploy:postSetup"
 namespace :develop do
 	task :deps, :roles => [:app] do
 		desc "== running npm on #{latest_release} =="
-		run "cd ~/drink_dev/current && rm -rf node_modules && npm install"
+		run "cd /home/drink/drink_server/current && rm -rf node_modules && npm install"
 	end
 
 	task :configs, :roles => [:app] do
-		run "cp ~/configs/mysql_config.js ~/configs/ldap_config.js ~/drink_dev/current/config"
+		run "cp /home/drink/configs/mysql_config.js /home/drink/configs/ldap_config.js /home/drink/drink_server/current/config"
 	end
 
 	task :stop, :roles => [:app] do
@@ -52,20 +52,20 @@ namespace :develop do
 
 	task :start, :roles => [:app] do
 		desc "======= Starting splash site ======="
-		run "export DRINK_ENV=dev; cd ~/drink_dev/current/lib && forever start server.js"
-		run "cd ~/drink_dev/current/websocket_server && forever start websocket_server.js"
-		run "cd ~/drink_dev/current/websocket_server && sudo nohup redirect.js"
+		run "export DRINK_ENV=dev; cd /home/drink/drink_server/current/lib && forever start server.js"
+		run "cd /home/drink/drink_server/current/websocket_server && forever start websocket_server.js"
+		run "cd /home/drink/drink_server/current/websocket_server && sudo nohup redirect.js"
 	end
 end
 
 namespace :prod do
 	task :deps, :roles => [:app] do
 		desc "== running npm on #{latest_release} =="
-		run "cd ~/drink_production/current && rm -rf node_modules && npm install"
+		run "cd /home/drink/drink_server/current && rm -rf node_modules && npm install"
 	end
 
 	task :configs, :roles => [:app] do
-		run "cp ~/configs/mysql_config.js ~/configs/ldap_config.js ~/drink_dev/current/config"
+		run "cp /home/drink/configs/mysql_config.js /home/drinkconfigs/ldap_config.js /home/drink/drink_server/current/config"
 	end
 
 	task :stop, :roles => [:app] do
@@ -77,9 +77,9 @@ namespace :prod do
 
 	task :start, :roles => [:app] do
 		desc "======= Starting splash site ======="
-		run "export DRINK_ENV=dev; cd ~/drink_production/current/lib && forever start server.js"
-		run "cd ~/drink_production/current/websocket_server && forever start websocket_server.js"
-		run "cd ~/drink_production/current/websocket_server && sudo nohup redirect.js"
+		run "export DRINK_ENV=dev; cd /home/drink/drink_production/current/lib && forever start server.js"
+		run "cd /home/drink/drink_server/current/websocket_server && forever start websocket_server.js"
+		run "cd /home/drink/drink_server/current/websocket_server && sudo nohup redirect.js"
 	end
 end
 

@@ -1,4 +1,4 @@
-server "192.168.1.128", :app, :web, :db, :primary => true
+server "purpledrank.csh.rit.edu", :app, :web, :db, :primary => true
 set :deploy_to, "/home/drink/drink_dev"
 
 after "deploy", "develop:deps", "develop:configs", "develop:stop", "develop:start"
