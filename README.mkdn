@@ -84,9 +84,10 @@ $ git clone https://github.com/ComputerScienceHouse/Drink-JS.git && cd Drink-JS
 
 ```
 exports.ldap = {
-    username: "",
+    bind_dn: "",
+    user_search_base: "cn=users,cn=accounts,dc=csh,dc=rit,dc=edu",
     password: "",
-    host: "ldap://ldap.csh.rit.edu",
+    host: "ldaps://stone.csh.rit.edu",
     version: 3
 }
 ```
